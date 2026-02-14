@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
 import LanguageSwitcher from '@/components/ui/LanguageSwitcher';
+import ThemeSwitcher from '@/components/ui/ThemeSwitcher';
 import MergePdfModal from '@/components/pdf/MergePdfModal';
 import { usePdf } from '@/store/PdfContext';
 
@@ -184,6 +185,7 @@ export default function Header() {
             )}
           </div>
 
+          <ThemeSwitcher />
           <LanguageSwitcher />
         </div>
       </header>

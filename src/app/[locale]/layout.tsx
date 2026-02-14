@@ -7,6 +7,7 @@ import { EditorProvider } from '@/store/EditorContext';
 import { CanvasProvider } from '@/store/CanvasContext';
 import { FormProvider } from '@/store/FormContext';
 import { ExportProvider } from '@/store/ExportContext';
+import { ThemeProvider } from '@/store/ThemeContext';
 import '../globals.css';
 
 const dmSans = DM_Sans({
@@ -39,20 +40,22 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className="h-full">
+    <html lang={locale} className="h-full" data-theme="base">
       <body
         className={`${dmSans.variable} ${jetbrainsMono.variable} font-[family-name:var(--font-dm-sans)] antialiased h-full`}
       >
         <NextIntlClientProvider messages={messages}>
-          <PdfProvider>
-            <EditorProvider>
-              <CanvasProvider>
-                <FormProvider>
-                  <ExportProvider>{children}</ExportProvider>
-                </FormProvider>
-              </CanvasProvider>
-            </EditorProvider>
-          </PdfProvider>
+          <ThemeProvider>
+            <PdfProvider>
+              <EditorProvider>
+                <CanvasProvider>
+                  <FormProvider>
+                    <ExportProvider>{children}</ExportProvider>
+                  </FormProvider>
+                </CanvasProvider>
+              </EditorProvider>
+            </PdfProvider>
+          </ThemeProvider>
         </NextIntlClientProvider>
       </body>
     </html>

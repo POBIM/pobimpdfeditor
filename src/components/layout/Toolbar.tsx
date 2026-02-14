@@ -19,6 +19,9 @@ const TOOLS: ToolDefinition[] = [
   { id: 'text', labelKey: 'text', icon: 'T' },
   { id: 'draw', labelKey: 'draw', icon: '✎' },
   { id: 'highlight', labelKey: 'highlight', icon: '▬' },
+  { id: 'measure', labelKey: 'measure', icon: '⟷' },
+  { id: 'measureArea', labelKey: 'measureArea', icon: '▭' },
+  { id: 'ocr', labelKey: 'ocr', icon: '◫' },
   { id: 'image', labelKey: 'image', icon: '▣' },
   { id: 'signature', labelKey: 'signature', icon: '✍' },
   { id: 'eraser', labelKey: 'eraser', icon: '◩' },
@@ -29,7 +32,15 @@ export default function Toolbar() {
   const tZoom = useTranslations('zoom');
   const tPages = useTranslations('pages');
   const tExport = useTranslations('export');
-  const { editorMode, activeTool, setEditorMode, setActiveTool } = useEditor();
+  const {
+    editorMode,
+    isFullscreen,
+    activeTool,
+    setEditorMode,
+    setFullscreen,
+    setActiveTool,
+    setPropertiesPanelOpen,
+  } = useEditor();
   const { undo, redo, canUndo, canRedo, setActiveCanvas } = useCanvas();
   const { openExport } = useExport();
   const { currentPage, numPages, setCurrentPage, zoom, zoomIn, zoomOut, pdfFile } =
@@ -40,10 +51,12 @@ export default function Toolbar() {
   const handleModeChange = (mode: 'view' | 'edit') => {
     setEditorMode(mode);
     if (mode === 'edit' && numPages > 0) {
+      setPropertiesPanelOpen(true);
       setActiveCanvas(currentPage);
       return;
     }
 
+    setPropertiesPanelOpen(false);
     setActiveCanvas(null);
   };
 
@@ -51,6 +64,8 @@ export default function Toolbar() {
     if (editorMode === 'view') {
       setEditorMode('edit');
     }
+
+    setPropertiesPanelOpen(true);
 
     if (numPages > 0) {
       setActiveCanvas(currentPage);
@@ -66,6 +81,37 @@ export default function Toolbar() {
     if (editorMode === 'edit') {
       setActiveCanvas(nextPage);
     }
+  };
+
+  const toggleFullscreen = () => {
+    if (typeof document === 'undefined') {
+      return;
+    }
+
+    const rootElement = document.documentElement;
+    const canRequestFullscreen = typeof rootElement.requestFullscreen === 'function';
+    const canExitFullscreen = typeof document.exitFullscreen === 'function';
+
+    if (!canRequestFullscreen || !canExitFullscreen) {
+      setFullscreen(!isFullscreen);
+      return;
+    }
+
+    const run = async () => {
+      try {
+        if (!document.fullscreenElement) {
+          await rootElement.requestFullscreen();
+        } else {
+          await document.exitFullscreen();
+        }
+
+        setFullscreen(Boolean(document.fullscreenElement));
+      } catch {
+        setFullscreen(!isFullscreen);
+      }
+    };
+
+    void run();
   };
 
   return (
@@ -135,6 +181,15 @@ export default function Toolbar() {
               <title>{tExport('download')}</title>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v12m0 0l4-4m-4 4l-4-4M5 21h14" />
             </svg>
+          </ToolButton>
+
+          <ToolButton
+            label={isFullscreen ? t('exitFullscreen') : t('fullscreen')}
+            onClick={toggleFullscreen}
+          >
+            <span className="text-base leading-none select-none">
+              {isFullscreen ? '⤡' : '⤢'}
+            </span>
           </ToolButton>
 
           <div className="flex items-center gap-1">

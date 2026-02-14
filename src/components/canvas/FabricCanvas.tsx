@@ -1,13 +1,16 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { Canvas, type TPointerEventInfo } from 'fabric';
+import { useCallback, useEffect, useRef } from 'react';
+import { Canvas, Group, IText, type TPointerEventInfo } from 'fabric';
 import { useEditor } from '@/store/EditorContext';
 import { getEmptyCanvasState, useCanvas } from '@/store/CanvasContext';
 import { useSelectTool } from '@/components/canvas/tools/useSelectTool';
 import { useTextTool } from '@/components/canvas/tools/useTextTool';
 import { useDrawTool } from '@/components/canvas/tools/useDrawTool';
 import { useHighlightTool } from '@/components/canvas/tools/useHighlightTool';
+import { useMeasureTool } from '@/components/canvas/tools/useMeasureTool';
+import { useMeasureAreaTool } from '@/components/canvas/tools/useMeasureAreaTool';
+import { useOcrTool } from '@/components/canvas/tools/useOcrTool';
 import { useImageTool } from '@/components/canvas/tools/useImageTool';
 import { useEraserTool } from '@/components/canvas/tools/useEraserTool';
 
@@ -42,6 +45,39 @@ function serializeCanvas(canvas: Canvas) {
   return JSON.stringify(canvas.toJSON());
 }
 
+function getEffectivePixelsPerUnit(
+  pixelsPerUnit: number,
+  calibrationScale: number,
+  currentScale: number
+) {
+  if (!Number.isFinite(pixelsPerUnit) || pixelsPerUnit <= 0) {
+    return pixelsPerUnit;
+  }
+
+  if (!Number.isFinite(calibrationScale) || calibrationScale <= 0) {
+    return pixelsPerUnit;
+  }
+
+  return pixelsPerUnit * (currentScale / calibrationScale);
+}
+
+function formatDistanceLabel(pixelDistance: number, pixelsPerUnit: number, unitLabel: string) {
+  if (!Number.isFinite(pixelsPerUnit) || pixelsPerUnit <= 0) {
+    return `${pixelDistance.toFixed(1)} px`;
+  }
+
+  return `${(pixelDistance / pixelsPerUnit).toFixed(2)} ${unitLabel}`;
+}
+
+function formatAreaLabel(areaPixels: number, pixelsPerUnit: number, unitLabel: string) {
+  if (!Number.isFinite(pixelsPerUnit) || pixelsPerUnit <= 0) {
+    return `${areaPixels.toFixed(1)} px²`;
+  }
+
+  const area = areaPixels / (pixelsPerUnit * pixelsPerUnit);
+  return `${area.toFixed(2)} ${unitLabel}²`;
+}
+
 export default function FabricCanvas({
   pageNumber,
   width,
@@ -49,7 +85,7 @@ export default function FabricCanvas({
   scale,
   isEditable,
 }: FabricCanvasProps) {
-  const { activeTool, toolConfig, setPropertiesPanelOpen } = useEditor();
+  const { activeTool, toolConfig, setToolConfig, setPropertiesPanelOpen } = useEditor();
   const {
     registerCanvas,
     unregisterCanvas,
@@ -67,6 +103,28 @@ export default function FabricCanvas({
   const fabricRef = useRef<Canvas | null>(null);
   const isRestoringRef = useRef(false);
   const previousSizeRef = useRef<{ width: number; height: number } | null>(null);
+  const measureConfigRef = useRef({
+    pixelsPerUnit: toolConfig.measure.pixelsPerUnit,
+    calibrationScale: toolConfig.measure.calibrationScale,
+    unitLabel: toolConfig.measure.unitLabel,
+  });
+  const scaleRef = useRef(scale);
+
+  useEffect(() => {
+    measureConfigRef.current = {
+      pixelsPerUnit: toolConfig.measure.pixelsPerUnit,
+      calibrationScale: toolConfig.measure.calibrationScale,
+      unitLabel: toolConfig.measure.unitLabel,
+    };
+  }, [
+    toolConfig.measure.pixelsPerUnit,
+    toolConfig.measure.calibrationScale,
+    toolConfig.measure.unitLabel,
+  ]);
+
+  useEffect(() => {
+    scaleRef.current = scale;
+  }, [scale]);
 
   useEffect(() => {
     if (!canvasElementRef.current) {
@@ -95,12 +153,16 @@ export default function FabricCanvas({
     const handleSelectionCreated = () => {
       const selected = canvas.getActiveObject();
       setSelectedObject(pageNumber, selected ?? null);
-      setPropertiesPanelOpen(Boolean(selected));
+      if (isEditable) {
+        setPropertiesPanelOpen(true);
+      }
     };
 
     const handleSelectionCleared = () => {
       setSelectedObject(null, null);
-      setPropertiesPanelOpen(false);
+      if (isEditable) {
+        setPropertiesPanelOpen(true);
+      }
     };
 
     const syncState = () => {
@@ -111,13 +173,104 @@ export default function FabricCanvas({
       pushHistoryState(pageNumber, serializeCanvas(canvas));
     };
 
+    const updateMeasurementLabel = (target: unknown) => {
+      if (!(target instanceof Group)) {
+        return;
+      }
+
+      const data = (
+        target as Group & {
+          data?: {
+            measurementType?: 'distance' | 'area-rectangle' | 'area-polygon';
+            baseDx?: number;
+            baseDy?: number;
+            baseAreaPixels?: number;
+          };
+        }
+      ).data;
+
+      if (!data?.measurementType) {
+        return;
+      }
+
+      const objects = target.getObjects();
+      const label = objects.find((object) => object instanceof IText) as IText | undefined;
+      if (!label) {
+        return;
+      }
+
+      const effectivePixelsPerUnit = getEffectivePixelsPerUnit(
+        measureConfigRef.current.pixelsPerUnit,
+        measureConfigRef.current.calibrationScale,
+        scaleRef.current
+      );
+
+      if (data.measurementType === 'distance') {
+        const baseDx = Number(data.baseDx ?? 0);
+        const baseDy = Number(data.baseDy ?? 0);
+        const scaleX = Math.abs(target.scaleX ?? 1);
+        const scaleY = Math.abs(target.scaleY ?? 1);
+        const pixelDistance = Math.sqrt(
+          baseDx * baseDx * scaleX * scaleX +
+          baseDy * baseDy * scaleY * scaleY
+        );
+
+        label.set(
+          'text',
+          formatDistanceLabel(
+            pixelDistance,
+            effectivePixelsPerUnit,
+            measureConfigRef.current.unitLabel
+          )
+        );
+      }
+
+      if (
+        data.measurementType === 'area-rectangle' ||
+        data.measurementType === 'area-polygon'
+      ) {
+        const baseAreaPixels = Number(data.baseAreaPixels ?? 0);
+        const scaleX = Math.abs(target.scaleX ?? 1);
+        const scaleY = Math.abs(target.scaleY ?? 1);
+        const areaPixels = baseAreaPixels * scaleX * scaleY;
+
+        label.set(
+          'text',
+          formatAreaLabel(
+            areaPixels,
+            effectivePixelsPerUnit,
+            measureConfigRef.current.unitLabel
+          )
+        );
+      }
+    };
+
+    const handleObjectAdded = () => {
+      syncState();
+    };
+
+    const handleObjectModified = (event: { target?: unknown }) => {
+      updateMeasurementLabel(event.target);
+      syncState();
+    };
+
+    const handleObjectScaling = (event: { target?: unknown }) => {
+      updateMeasurementLabel(event.target);
+      canvas.requestRenderAll();
+    };
+
+    const handleObjectRemoved = () => {
+      syncState();
+    };
+
     canvas.on('mouse:down', handlePointerDown);
     canvas.on('selection:created', handleSelectionCreated);
     canvas.on('selection:updated', handleSelectionCreated);
     canvas.on('selection:cleared', handleSelectionCleared);
-    canvas.on('object:added', syncState);
-    canvas.on('object:modified', syncState);
-    canvas.on('object:removed', syncState);
+    canvas.on('object:added', handleObjectAdded);
+    canvas.on('object:modified', handleObjectModified);
+    canvas.on('object:scaling', handleObjectScaling);
+    canvas.on('object:removed', handleObjectRemoved);
 
     if (initialState !== getEmptyCanvasState()) {
       const restoreInitialState = async () => {
@@ -149,9 +302,10 @@ export default function FabricCanvas({
       canvas.off('selection:created', handleSelectionCreated);
       canvas.off('selection:updated', handleSelectionCreated);
       canvas.off('selection:cleared', handleSelectionCleared);
-      canvas.off('object:added', syncState);
-      canvas.off('object:modified', syncState);
-      canvas.off('object:removed', syncState);
+      canvas.off('object:added', handleObjectAdded);
+      canvas.off('object:modified', handleObjectModified);
+      canvas.off('object:scaling', handleObjectScaling);
+      canvas.off('object:removed', handleObjectRemoved);
       isRestoringRef.current = false;
       setSelectedObject(null, null);
       unregisterCanvas(pageNumber);
@@ -170,6 +324,7 @@ export default function FabricCanvas({
     pushHistoryState,
     initializePageHistory,
     getPageSerializedState,
+    isEditable,
   ]);
 
   useEffect(() => {
@@ -258,6 +413,17 @@ export default function FabricCanvas({
     };
   }, [pageNumber, isEditable, activeTool, getCanvas, openSignaturePad]);
 
+  const handleMeasureCalibrated = useCallback(
+    (nextPixelsPerUnit: number, nextCalibrationScale: number) => {
+      setToolConfig('measure', {
+        pixelsPerUnit: nextPixelsPerUnit,
+        calibrationScale: nextCalibrationScale,
+        isCalibrated: true,
+      });
+    },
+    [setToolConfig]
+  );
+
   useSelectTool(fabricRef.current, isEditable && activeTool === 'select');
   useTextTool(fabricRef.current, isEditable && activeTool === 'text', toolConfig.text);
   useDrawTool(fabricRef.current, isEditable && activeTool === 'draw', toolConfig.draw);
@@ -266,6 +432,21 @@ export default function FabricCanvas({
     isEditable && activeTool === 'highlight',
     toolConfig.highlight
   );
+  useMeasureTool(
+    fabricRef.current,
+    isEditable && activeTool === 'measure',
+    toolConfig.measure,
+    scale,
+    handleMeasureCalibrated
+  );
+  useMeasureAreaTool(
+    fabricRef.current,
+    isEditable && activeTool === 'measureArea',
+    toolConfig.measureArea,
+    toolConfig.measure,
+    scale
+  );
+  useOcrTool(fabricRef.current, isEditable && activeTool === 'ocr', toolConfig.ocr);
   useImageTool(fabricRef.current, isEditable && activeTool === 'image');
   useEraserTool(fabricRef.current, isEditable && activeTool === 'eraser');
 

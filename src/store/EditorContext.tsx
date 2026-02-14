@@ -12,6 +12,7 @@ import type { EditorState, EditorMode, EditorTool, ToolConfigState } from '@/typ
 
 interface EditorContextValue extends EditorState {
   setEditorMode: (mode: EditorMode) => void;
+  setFullscreen: (fullscreen: boolean) => void;
   setActiveTool: (tool: EditorTool) => void;
   setToolConfig: (tool: keyof ToolConfigState, config: Partial<ToolConfigState[keyof ToolConfigState]>) => void;
   toggleSidebar: () => void;
@@ -36,6 +37,26 @@ const DEFAULT_TOOL_CONFIG: ToolConfigState = {
     brushSize: 20,
     opacity: 0.4,
   },
+  measure: {
+    color: '#ff4d4f',
+    lineWidth: 2,
+    unitLabel: 'cm',
+    pixelsPerUnit: 37.8,
+    calibrationScale: 1,
+    isCalibrated: false,
+  },
+  measureArea: {
+    color: '#ff4d4f',
+    lineWidth: 2,
+    fillOpacity: 0.14,
+    mode: 'rectangle',
+  },
+  ocr: {
+    language: 'tha+eng',
+    outputFontSize: 16,
+    outputColor: '#111111',
+    minSelectionSize: 24,
+  },
 };
 
 const EditorContext = createContext<EditorContextValue | null>(null);
@@ -43,6 +64,7 @@ const EditorContext = createContext<EditorContextValue | null>(null);
 export function EditorProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<EditorState>({
     editorMode: 'view',
+    isFullscreen: false,
     activeTool: 'select',
     sidebarOpen: true,
     propertiesPanelOpen: false,
@@ -51,6 +73,10 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 
   const setEditorMode = useCallback((mode: EditorMode) => {
     setState((prev) => ({ ...prev, editorMode: mode }));
+  }, []);
+
+  const setFullscreen = useCallback((fullscreen: boolean) => {
+    setState((prev) => ({ ...prev, isFullscreen: fullscreen }));
   }, []);
 
   const setActiveTool = useCallback((tool: EditorTool) => {
@@ -96,6 +122,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
     () => ({
         ...state,
         setEditorMode,
+        setFullscreen,
         setActiveTool,
         setToolConfig,
         toggleSidebar,
@@ -106,6 +133,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
     [
       state,
       setEditorMode,
+      setFullscreen,
       setActiveTool,
       setToolConfig,
       toggleSidebar,

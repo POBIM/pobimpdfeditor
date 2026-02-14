@@ -1,10 +1,11 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import type { FabricObject } from 'fabric';
 import { useCanvas } from '@/store/CanvasContext';
 import { useEditor } from '@/store/EditorContext';
+import { usePdf } from '@/store/PdfContext';
 
 function isTextObject(object: FabricObject) {
   return object.type === 'i-text' || object.type === 'text';
@@ -48,24 +49,90 @@ function getObjectIdentity(object: FabricObject) {
   return objectIdentityCounter;
 }
 
+function getElementDisplayName(object: FabricObject, index: number) {
+  if (isTextObject(object)) {
+    const value = String(object.get('text') ?? '').trim();
+    if (value.length > 0) {
+      return `${index + 1}. ${value.slice(0, 24)}`;
+    }
+
+    return `${index + 1}. Text`;
+  }
+
+  if (isImageObject(object)) {
+    return `${index + 1}. Image`;
+  }
+
+  if (isPathObject(object)) {
+    return `${index + 1}. Drawing`;
+  }
+
+  if (object.type === 'group') {
+    return `${index + 1}. Group`;
+  }
+
+  return `${index + 1}. ${object.type ?? 'Object'}`;
+}
+
 export default function PropertiesPanel() {
   const t = useTranslations('properties');
-  const { propertiesPanelOpen, setPropertiesPanelOpen } = useEditor();
+  const { editorMode, propertiesPanelOpen, setPropertiesPanelOpen } = useEditor();
+  const { currentPage } = usePdf();
   const {
+    activePageNumber,
     selectedObject,
     selectedPageNumber,
     getCanvas,
+    setSelectedObject,
     pushHistoryState,
   } = useCanvas();
   const [, setRenderRevision] = useState(0);
+  const [objectsRevision, setObjectsRevision] = useState(0);
+
+  const panelPageNumber = selectedPageNumber ?? activePageNumber ?? currentPage;
 
   const targetCanvas = useMemo(() => {
-    if (selectedPageNumber === null) {
+    if (panelPageNumber === null) {
       return null;
     }
 
-    return getCanvas(selectedPageNumber);
-  }, [getCanvas, selectedPageNumber]);
+    return getCanvas(panelPageNumber);
+  }, [getCanvas, panelPageNumber]);
+
+  useEffect(() => {
+    if (editorMode === 'edit' && !propertiesPanelOpen) {
+      setPropertiesPanelOpen(true);
+    }
+  }, [editorMode, propertiesPanelOpen, setPropertiesPanelOpen]);
+
+  useEffect(() => {
+    if (!targetCanvas) {
+      return;
+    }
+
+    const bumpRevision = () => {
+      setObjectsRevision((prev) => prev + 1);
+    };
+
+    targetCanvas.on('object:added', bumpRevision);
+    targetCanvas.on('object:removed', bumpRevision);
+    targetCanvas.on('object:modified', bumpRevision);
+    targetCanvas.on('selection:created', bumpRevision);
+    targetCanvas.on('selection:updated', bumpRevision);
+    targetCanvas.on('selection:cleared', bumpRevision);
+
+    return () => {
+      targetCanvas.off('object:added', bumpRevision);
+      targetCanvas.off('object:removed', bumpRevision);
+      targetCanvas.off('object:modified', bumpRevision);
+      targetCanvas.off('selection:created', bumpRevision);
+      targetCanvas.off('selection:updated', bumpRevision);
+      targetCanvas.off('selection:cleared', bumpRevision);
+    };
+  }, [targetCanvas]);
+
+  void objectsRevision;
+  const pageObjects = targetCanvas ? targetCanvas.getObjects() : ([] as FabricObject[]);
 
   const selectedProfile = useMemo(() => {
     if (!selectedObject) {
@@ -81,18 +148,41 @@ export default function PropertiesPanel() {
     }
 
     const identity = getObjectIdentity(selectedObject);
-    return `${selectedPageNumber ?? 'none'}-${identity}`;
-  }, [selectedObject, selectedPageNumber]);
+    return `${panelPageNumber ?? 'none'}-${identity}`;
+  }, [selectedObject, panelPageNumber]);
 
   const applyObjectUpdate = (properties: Record<string, string | number | boolean>) => {
-    if (!selectedObject || !targetCanvas || selectedPageNumber === null) {
+    if (!selectedObject || !targetCanvas || panelPageNumber === null) {
       return;
     }
 
     selectedObject.set(properties);
     selectedObject.setCoords();
     targetCanvas.requestRenderAll();
-    pushHistoryState(selectedPageNumber, JSON.stringify(targetCanvas.toJSON()));
+    pushHistoryState(panelPageNumber, JSON.stringify(targetCanvas.toJSON()));
+    setRenderRevision((prev) => prev + 1);
+  };
+
+  const selectElementFromList = (object: FabricObject) => {
+    if (!targetCanvas || panelPageNumber === null) {
+      return;
+    }
+
+    targetCanvas.setActiveObject(object);
+    targetCanvas.requestRenderAll();
+    setSelectedObject(panelPageNumber, object);
+  };
+
+  const deleteElementFromList = (object: FabricObject) => {
+    if (!targetCanvas || panelPageNumber === null) {
+      return;
+    }
+
+    targetCanvas.remove(object);
+    targetCanvas.discardActiveObject();
+    targetCanvas.requestRenderAll();
+    setSelectedObject(null, null);
+    pushHistoryState(panelPageNumber, JSON.stringify(targetCanvas.toJSON()));
     setRenderRevision((prev) => prev + 1);
   };
 
@@ -118,6 +208,52 @@ export default function PropertiesPanel() {
               {t('title')}
             </span>
           </div>
+
+          {panelPageNumber !== null && (
+            <section className="p-3 border-b border-border-subtle">
+              <div className="text-[10px] uppercase tracking-wider text-text-tertiary">
+                {t('elementsOnPage')} {panelPageNumber}
+              </div>
+
+              {pageObjects.length === 0 ? (
+                <div className="mt-2 text-xs text-text-tertiary">{t('noElementsOnPage')}</div>
+              ) : (
+                <div className="mt-2 max-h-40 overflow-y-auto space-y-1.5 pr-1">
+                  {pageObjects.map((object, index) => {
+                    const objectId = getObjectIdentity(object);
+                    const isActive = selectedObject === object;
+
+                    return (
+                      <div
+                        key={`${panelPageNumber}-${objectId}`}
+                        className={`flex items-center gap-1 rounded border px-1 py-1 ${
+                          isActive
+                            ? 'border-accent-500 bg-accent-500/10'
+                            : 'border-border-subtle bg-surface-700/40'
+                        }`}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => selectElementFromList(object)}
+                          className="flex-1 text-left text-xs text-text-secondary hover:text-text-primary truncate px-1"
+                        >
+                          {getElementDisplayName(object, index)}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => deleteElementFromList(object)}
+                          className="h-6 w-6 shrink-0 rounded border border-border-default text-xs text-error hover:bg-surface-600"
+                          aria-label={t('deleteElement')}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
+          )}
 
           {!selectedObject && (
             <div className="p-4 text-xs text-text-tertiary">{t('noSelection')}</div>

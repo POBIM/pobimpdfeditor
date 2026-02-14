@@ -1,10 +1,14 @@
 export type Locale = 'th' | 'en';
+export type ThemeMode = 'base' | 'light' | 'dark';
 
 export type EditorTool =
   | 'select'
   | 'text'
   | 'draw'
   | 'highlight'
+  | 'measure'
+  | 'measureArea'
+  | 'ocr'
   | 'image'
   | 'signature'
   | 'eraser';
@@ -31,6 +35,7 @@ export interface PdfState {
 
 export interface EditorState {
   editorMode: EditorMode;
+  isFullscreen: boolean;
   activeTool: EditorTool;
   sidebarOpen: boolean;
   propertiesPanelOpen: boolean;
@@ -55,8 +60,34 @@ export interface HighlightToolConfig {
   opacity: number;
 }
 
+export interface MeasureToolConfig {
+  color: string;
+  lineWidth: number;
+  unitLabel: string;
+  pixelsPerUnit: number;
+  calibrationScale: number;
+  isCalibrated: boolean;
+}
+
+export interface AreaMeasureToolConfig {
+  color: string;
+  lineWidth: number;
+  fillOpacity: number;
+  mode: 'rectangle' | 'polygon';
+}
+
+export interface OcrToolConfig {
+  language: 'eng' | 'tha+eng';
+  outputFontSize: number;
+  outputColor: string;
+  minSelectionSize: number;
+}
+
 export interface ToolConfigState {
   text: TextToolConfig;
   draw: DrawToolConfig;
   highlight: HighlightToolConfig;
+  measure: MeasureToolConfig;
+  measureArea: AreaMeasureToolConfig;
+  ocr: OcrToolConfig;
 }
