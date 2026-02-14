@@ -35,7 +35,6 @@
     "donateSubtitle": "สแกน PromptPay QR เพื่อสนับสนุนการพัฒนา",
     "donateQrAlt": "PromptPay QR สำหรับโดเนต",
     "donateQrMissing": "ยังไม่ได้ตั้งค่าเบอร์ PromptPay สำหรับสร้าง QR กรุณาตั้งค่า NEXT_PUBLIC_DONATE_PROMPTPAY_PHONE",
-    "donateHashLabel": "แฮชยืนยันหมายเลขปลายทาง",
     "closeDonate": "ปิด"
   },
   "zoom": {

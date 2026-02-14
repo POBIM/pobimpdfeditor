@@ -25,18 +25,6 @@ This repository is configured to deploy to GitHub Pages through GitHub Actions.
 
 Workflow path: `.github/workflows/deploy.yml`
 
-## Support
-
-If you want to support this free project, donation via PromptPay QR is welcome.
-
-To render the in-app Donate QR button, set:
-
-`NEXT_PUBLIC_DONATE_PROMPTPAY_PHONE=<your-phone-number>`
-
-For public web display, the phone number is shown only as a hash:
-
-`sha256: 23239387452d5a352267e364e9c3faafb05913395e10d68e2470dbecd8b7e384`
-
 ## License
 
 MIT License. See `LICENSE`.

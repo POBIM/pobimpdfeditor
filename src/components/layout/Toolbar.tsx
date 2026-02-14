@@ -28,9 +28,6 @@ const TOOLS: ToolDefinition[] = [
   { id: 'eraser', labelKey: 'eraser', icon: '◩' },
 ];
 
-const DONATION_PHONE_HASH =
-  'sha256: 23239387452d5a352267e364e9c3faafb05913395e10d68e2470dbecd8b7e384';
-
 const normalizePromptPayPhone = (value: string): string => {
   const digits = value.replace(/\D/g, '');
 
@@ -333,13 +330,6 @@ export default function Toolbar() {
                   {t('donateQrMissing')}
                 </div>
               )}
-
-              <div>
-                <p className="text-[11px] text-text-tertiary">{t('donateHashLabel')}</p>
-                <code className="mt-1 block break-all rounded bg-surface-700 px-2 py-1 text-[11px] text-text-secondary">
-                  {DONATION_PHONE_HASH}
-                </code>
-              </div>
             </div>
 
             <div className="flex items-center justify-end border-t border-border-subtle px-5 py-4">
