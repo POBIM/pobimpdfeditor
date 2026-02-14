@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# POBIM PDF Editor
 
-## Getting Started
+Browser-first PDF editor built with Next.js, React, Fabric.js, `react-pdf`, and `pdf-lib`.
 
-First, run the development server:
+## Mission
+
+This project is made for the working community and is distributed for free.
+
+## Local Development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## GitHub Pages Deployment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This repository is configured to deploy to GitHub Pages through GitHub Actions.
 
-## Learn More
+1. Push to `main`
+2. Go to GitHub repository `Settings` -> `Pages`
+3. Set source to `GitHub Actions`
 
-To learn more about Next.js, take a look at the following resources:
+Workflow path: `.github/workflows/deploy.yml`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Support
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+If you want to support this free project, donation via PromptPay QR is welcome.
 
-## Deploy on Vercel
+For public web display, the phone number is shown only as a hash:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`sha256: 23239387452d5a352267e364e9c3faafb05913395e10d68e2470dbecd8b7e384`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+MIT License. See `LICENSE`.

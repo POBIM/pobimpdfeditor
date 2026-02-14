@@ -1,13 +1,14 @@
 import type { Metadata } from 'next';
 import { DM_Sans, JetBrains_Mono } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getMessages, setRequestLocale } from 'next-intl/server';
 import { PdfProvider } from '@/store/PdfContext';
 import { EditorProvider } from '@/store/EditorContext';
 import { CanvasProvider } from '@/store/CanvasContext';
 import { FormProvider } from '@/store/FormContext';
 import { ExportProvider } from '@/store/ExportContext';
 import { ThemeProvider } from '@/store/ThemeContext';
+import { routing } from '@/i18n/routing';
 import '../globals.css';
 
 const dmSans = DM_Sans({
@@ -29,6 +30,10 @@ export const metadata: Metadata = {
   description: 'Professional PDF editing in your browser',
 };
 
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
 export default async function LocaleLayout({
   children,
   params,
@@ -37,6 +42,7 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const messages = await getMessages();
 
   return (
