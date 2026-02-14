@@ -22,9 +22,8 @@ Browser-first PDF editor built on Next.js 16 + React 19. Core stack is `react-pd
 |  |- i18n/                # Locale routing + request config
 |  |- messages/            # en/th translation bundles
 |  \- types/              # Shared type contracts
-|- public/                 # Static assets, copied pdf worker
-|- next.config.ts          # next-intl plugin + canvas alias workaround
-\- copy-pdf-worker.mjs     # Postinstall worker copy
+|- public/                 # Static assets
+\- next.config.ts          # next-intl plugin + canvas alias workaround
 ```
 
 ## WHERE TO LOOK
@@ -55,7 +54,6 @@ Browser-first PDF editor built on Next.js 16 + React 19. Core stack is `react-pd
 - TypeScript runs in strict mode; avoid implicit widening and nullable assumptions.
 - Locale routing is mandatory under `app/[locale]`; default locale is Thai.
 - Fabric's `canvas` module is aliased/stubbed in both Turbopack and webpack.
-- PDF worker file is expected at `public/pdf.worker.min.mjs` via postinstall script.
 - Context composition order in layout is intentional: Theme -> Pdf -> Editor -> Canvas -> Form -> Export.
 
 ## ANTI-PATTERNS (THIS PROJECT)
@@ -73,7 +71,7 @@ Browser-first PDF editor built on Next.js 16 + React 19. Core stack is `react-pd
 
 ## COMMANDS
 ```bash
-npm install        # includes postinstall worker copy
+npm install
 npm run dev
 npm run build
 npm start
