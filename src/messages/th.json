@@ -118,6 +118,7 @@
     "pixelsPerUnit": "พิกเซลต่อหน่วย",
     "ocrLanguage": "ภาษา OCR",
     "ocrLanguageEng": "อังกฤษ",
+    "ocrLanguageTha": "ไทย",
     "ocrLanguageThaEng": "ไทย + อังกฤษ",
     "minSelectionSize": "ขนาดขั้นต่ำ",
     "outputFontSize": "ขนาดข้อความผลลัพธ์",

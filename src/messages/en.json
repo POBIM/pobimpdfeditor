@@ -118,6 +118,7 @@
     "pixelsPerUnit": "Pixels per Unit",
     "ocrLanguage": "OCR Language",
     "ocrLanguageEng": "English",
+    "ocrLanguageTha": "Thai",
     "ocrLanguageThaEng": "Thai + English",
     "minSelectionSize": "Min Region",
     "outputFontSize": "Output Font Size",

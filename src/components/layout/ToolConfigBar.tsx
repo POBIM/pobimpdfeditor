@@ -221,12 +221,13 @@ export default function ToolConfigBar() {
               value={toolConfig.ocr.language}
               onChange={(event) =>
                 setToolConfig('ocr', {
-                  language: event.target.value as 'eng' | 'tha+eng',
+                  language: event.target.value as 'eng' | 'tha' | 'tha+eng',
                 })
               }
               className="h-7 px-2 rounded bg-surface-600 border border-border-default text-text-primary text-xs"
             >
               <option value="eng">{t('ocrLanguageEng')}</option>
+              <option value="tha">{t('ocrLanguageTha')}</option>
               <option value="tha+eng">{t('ocrLanguageThaEng')}</option>
             </select>
           </label>

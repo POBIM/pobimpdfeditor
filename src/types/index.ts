@@ -77,7 +77,7 @@ export interface AreaMeasureToolConfig {
 }
 
 export interface OcrToolConfig {
-  language: 'eng' | 'tha+eng';
+  language: 'eng' | 'tha' | 'tha+eng';
   outputFontSize: number;
   outputColor: string;
   minSelectionSize: number;
