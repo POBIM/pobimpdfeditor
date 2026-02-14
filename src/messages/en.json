@@ -29,7 +29,14 @@
     "signature": "Signature",
     "eraser": "Eraser",
     "undo": "Undo",
-    "redo": "Redo"
+    "redo": "Redo",
+    "donate": "Donate",
+    "donateTitle": "Support this project",
+    "donateSubtitle": "Scan PromptPay QR to support development",
+    "donateQrAlt": "PromptPay donation QR",
+    "donateQrMissing": "PromptPay phone is not configured yet. Set NEXT_PUBLIC_DONATE_PROMPTPAY_PHONE to show QR.",
+    "donateHashLabel": "Destination number verification hash",
+    "closeDonate": "Close"
   },
   "zoom": {
     "zoomIn": "Zoom In",

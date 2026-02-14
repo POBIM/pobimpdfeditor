@@ -16,6 +16,11 @@ interface TesseractWorkerLike {
 let workerPromise: Promise<TesseractWorkerLike> | null = null;
 let workerLanguage: OcrLanguage | null = null;
 
+const OCR_TARGET_LONG_EDGE_PX = 2800;
+const OCR_MAX_UPSCALE_FACTOR = 6;
+const OCR_MAX_DIMENSION_PX = 4096;
+const OCR_MAX_PIXELS = 12_000_000;
+
 async function getOcrWorker(language: OcrLanguage): Promise<TesseractWorkerLike> {
   const { createWorker } = await import('tesseract.js');
 
@@ -109,6 +114,71 @@ function extractRegionCanvas(
   );
 
   return regionCanvas;
+}
+
+function upscaleRegionCanvasForOcr(regionCanvas: HTMLCanvasElement) {
+  const sourceWidth = regionCanvas.width;
+  const sourceHeight = regionCanvas.height;
+  if (sourceWidth <= 0 || sourceHeight <= 0) {
+    return regionCanvas;
+  }
+
+  const longestEdge = Math.max(sourceWidth, sourceHeight);
+  const sourcePixels = sourceWidth * sourceHeight;
+  if (longestEdge <= 0 || sourcePixels <= 0) {
+    return regionCanvas;
+  }
+
+  const desiredScale = OCR_TARGET_LONG_EDGE_PX / longestEdge;
+  const maxScaleByDimension = OCR_MAX_DIMENSION_PX / longestEdge;
+  const maxScaleByPixels = Math.sqrt(OCR_MAX_PIXELS / sourcePixels);
+
+  const upscaleFactor = Math.max(
+    1,
+    Math.min(
+      OCR_MAX_UPSCALE_FACTOR,
+      desiredScale,
+      maxScaleByDimension,
+      maxScaleByPixels
+    )
+  );
+
+  if (upscaleFactor <= 1.01) {
+    return regionCanvas;
+  }
+
+  const targetWidth = Math.max(
+    1,
+    Math.min(OCR_MAX_DIMENSION_PX, Math.round(sourceWidth * upscaleFactor))
+  );
+  const targetHeight = Math.max(
+    1,
+    Math.min(OCR_MAX_DIMENSION_PX, Math.round(sourceHeight * upscaleFactor))
+  );
+
+  const upscaledCanvas = document.createElement('canvas');
+  upscaledCanvas.width = targetWidth;
+  upscaledCanvas.height = targetHeight;
+
+  const upscaledContext = upscaledCanvas.getContext('2d');
+  if (!upscaledContext) {
+    return regionCanvas;
+  }
+
+  upscaledContext.imageSmoothingEnabled = false;
+  upscaledContext.drawImage(
+    regionCanvas,
+    0,
+    0,
+    sourceWidth,
+    sourceHeight,
+    0,
+    0,
+    targetWidth,
+    targetHeight
+  );
+
+  return upscaledCanvas;
 }
 
 function drawSelectionPreview(
@@ -215,10 +285,12 @@ export function useOcrTool(
         return;
       }
 
-      const regionCanvas = extractRegionCanvas(sourceCanvas, selectedRect);
-      if (!regionCanvas) {
+      const extractedRegionCanvas = extractRegionCanvas(sourceCanvas, selectedRect);
+      if (!extractedRegionCanvas) {
         return;
       }
+
+      const regionCanvas = upscaleRegionCanvasForOcr(extractedRegionCanvas);
 
       isProcessing = true;
       canvas.defaultCursor = 'progress';
