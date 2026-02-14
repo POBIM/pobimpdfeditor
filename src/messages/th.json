@@ -1,0 +1,159 @@
+{
+  "app": {
+    "title": "POBIM PDF Editor",
+    "description": "แก้ไข PDF อย่างมืออาชีพในเบราว์เซอร์ของคุณ"
+  },
+  "header": {
+    "untitledDocument": "เอกสารไม่มีชื่อ",
+    "language": "ภาษา",
+    "thai": "ไทย",
+    "english": "English"
+  },
+  "toolbar": {
+    "select": "เลือก",
+    "text": "ข้อความ",
+    "draw": "วาด",
+    "highlight": "ไฮไลท์",
+    "image": "รูปภาพ",
+    "signature": "ลายเซ็น",
+    "eraser": "ยางลบ",
+    "undo": "เลิกทำ",
+    "redo": "ทำซ้ำ"
+  },
+  "zoom": {
+    "zoomIn": "ขยาย",
+    "zoomOut": "ย่อ",
+    "fitWidth": "พอดีความกว้าง",
+    "fitPage": "พอดีหน้า"
+  },
+  "pages": {
+    "page": "หน้า",
+    "of": "จาก",
+    "previous": "หน้าก่อน",
+    "next": "หน้าถัดไป",
+    "thumbnails": "ภาพขนาดย่อ",
+    "pageCount": "{count} หน้า"
+  },
+  "sidebar": {
+    "pages": "หน้า",
+    "properties": "คุณสมบัติ",
+    "collapse": "ซ่อนแถบด้านข้าง",
+    "expand": "แสดงแถบด้านข้าง"
+  },
+  "upload": {
+    "title": "เปิดไฟล์ PDF",
+    "description": "ลากและวางไฟล์ PDF ของคุณที่นี่ หรือคลิกเพื่อเลือกไฟล์",
+    "browse": "เลือกไฟล์",
+    "dropHere": "วางไฟล์ PDF ของคุณที่นี่",
+    "invalidFile": "กรุณาเลือกไฟล์ PDF ที่ถูกต้อง",
+    "acceptedFormats": "รูปแบบที่รองรับ: PDF"
+  },
+  "viewer": {
+    "loading": "กำลังโหลดเอกสาร...",
+    "loadingPage": "กำลังโหลดหน้า...",
+    "error": "ไม่สามารถโหลดเอกสารได้",
+    "errorPage": "ไม่สามารถโหลดหน้าได้",
+    "noDocument": "ยังไม่ได้โหลดเอกสาร",
+    "retry": "ลองอีกครั้ง"
+  },
+  "properties": {
+    "title": "คุณสมบัติ",
+    "noSelection": "เลือกองค์ประกอบเพื่อดูคุณสมบัติ",
+    "position": "ตำแหน่ง",
+    "size": "ขนาด",
+    "rotation": "การหมุน",
+    "opacity": "ความทึบ",
+    "fontSize": "ขนาดอักษร",
+    "fontFamily": "แบบอักษร",
+    "color": "สี",
+    "bold": "ตัวหนา",
+    "italic": "ตัวเอียง",
+    "strokeColor": "สีเส้น",
+    "strokeWidth": "ความหนาเส้น",
+    "aspectRatioLock": "ล็อกสัดส่วน"
+  },
+  "toolConfig": {
+    "brushSize": "ขนาดแปรง",
+    "color": "สี",
+    "fontSize": "ขนาดอักษร",
+    "bold": "ตัวหนา",
+    "italic": "ตัวเอียง",
+    "opacity": "ความทึบ"
+  },
+  "signature": {
+    "title": "วาดลายเซ็น",
+    "clear": "ล้าง",
+    "cancel": "ยกเลิก",
+    "apply": "นำไปใช้",
+    "instruction": "วาดลายเซ็นของคุณด้านล่าง"
+  },
+  "pageManagement": {
+    "deletePage": "ลบหน้า",
+    "deleteSelected": "ลบที่เลือก ({count})",
+    "rotateCW": "หมุนตามเข็มนาฬิกา",
+    "rotateCCW": "หมุนทวนเข็มนาฬิกา",
+    "extractPage": "แยกหน้านี้",
+    "extractSelected": "แยกหน้าที่เลือก",
+    "confirmDelete": "คุณแน่ใจหรือไม่ว่าต้องการลบ {count} หน้า?",
+    "reorderHint": "ลากเพื่อจัดเรียงหน้าใหม่"
+  },
+  "merge": {
+    "title": "รวมไฟล์ PDF",
+    "description": "เพิ่มไฟล์ PDF เพื่อรวมกับเอกสารปัจจุบัน",
+    "addFiles": "เพิ่มไฟล์",
+    "fileCount": "พร้อมแล้ว {count} ไฟล์",
+    "totalPages": "รวม: {count} หน้า",
+    "merging": "กำลังรวม...",
+    "merge": "รวมทั้งหมด",
+    "cancel": "ยกเลิก",
+    "dragToReorder": "ลากเพื่อจัดลำดับ",
+    "currentDocument": "เอกสารปัจจุบัน"
+  },
+  "split": {
+    "title": "แยก PDF",
+    "extractPages": "แยกหน้า",
+    "splitAtPage": "แยกที่หน้า",
+    "selectPages": "เลือกหน้าที่ต้องการแยก",
+    "splitPoint": "แยกหลังหน้า",
+    "download": "ดาวน์โหลด",
+    "downloadPart1": "ดาวน์โหลดส่วนที่ 1 (หน้า 1-{page})",
+    "downloadPart2": "ดาวน์โหลดส่วนที่ 2 (หน้า {page}-{total})",
+    "noSelection": "กรุณาเลือกอย่างน้อยหนึ่งหน้า",
+    "cancel": "ยกเลิก"
+  },
+  "file": {
+    "menu": "ไฟล์",
+    "open": "เปิด PDF",
+    "merge": "รวม PDF",
+    "split": "แยก PDF",
+    "close": "ปิดเอกสาร",
+    "download": "ดาวน์โหลด PDF"
+  },
+  "form": {
+    "fillableField": "ช่องกรอกข้อมูล",
+    "required": "จำเป็น",
+    "optional": "ไม่บังคับ",
+    "textField": "ช่องข้อความ",
+    "checkbox": "ช่องทำเครื่องหมาย",
+    "dropdown": "รายการแบบเลื่อนลง",
+    "radio": "ปุ่มตัวเลือก"
+  },
+  "export": {
+    "title": "ส่งออก PDF",
+    "exporting": "กำลังส่งออก PDF...",
+    "preparing": "กำลังเตรียมเอกสาร...",
+    "processingPage": "กำลังประมวลผลหน้า {current} จาก {total}...",
+    "embedding": "กำลังฝังคำอธิบายประกอบ...",
+    "finalizing": "กำลังสรุปเอกสาร...",
+    "complete": "ส่งออกเสร็จสิ้น!",
+    "download": "ดาวน์โหลด PDF",
+    "downloadAgain": "ดาวน์โหลดอีกครั้ง",
+    "cancel": "ยกเลิก",
+    "flattenForms": "ทำให้ช่องฟอร์มถาวร",
+    "flattenFormsDesc": "ทำให้ค่าฟอร์มถาวร (ไม่สามารถแก้ไขได้)",
+    "includeAnnotations": "รวมคำอธิบายประกอบ",
+    "quality": "คุณภาพการส่งออก",
+    "qualityStandard": "มาตรฐาน",
+    "qualityHigh": "สูง"
+  }
+}

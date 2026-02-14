@@ -1,0 +1,159 @@
+{
+  "app": {
+    "title": "POBIM PDF Editor",
+    "description": "Professional PDF editing in your browser"
+  },
+  "header": {
+    "untitledDocument": "Untitled Document",
+    "language": "Language",
+    "thai": "ไทย",
+    "english": "English"
+  },
+  "toolbar": {
+    "select": "Select",
+    "text": "Text",
+    "draw": "Draw",
+    "highlight": "Highlight",
+    "image": "Image",
+    "signature": "Signature",
+    "eraser": "Eraser",
+    "undo": "Undo",
+    "redo": "Redo"
+  },
+  "zoom": {
+    "zoomIn": "Zoom In",
+    "zoomOut": "Zoom Out",
+    "fitWidth": "Fit Width",
+    "fitPage": "Fit Page"
+  },
+  "pages": {
+    "page": "Page",
+    "of": "of",
+    "previous": "Previous Page",
+    "next": "Next Page",
+    "thumbnails": "Page Thumbnails",
+    "pageCount": "{count} pages"
+  },
+  "sidebar": {
+    "pages": "Pages",
+    "properties": "Properties",
+    "collapse": "Collapse Sidebar",
+    "expand": "Expand Sidebar"
+  },
+  "upload": {
+    "title": "Open a PDF File",
+    "description": "Drag and drop your PDF here, or click to browse",
+    "browse": "Browse Files",
+    "dropHere": "Drop your PDF file here",
+    "invalidFile": "Please select a valid PDF file",
+    "acceptedFormats": "Accepted format: PDF"
+  },
+  "viewer": {
+    "loading": "Loading document...",
+    "loadingPage": "Loading page...",
+    "error": "Failed to load document",
+    "errorPage": "Failed to load page",
+    "noDocument": "No document loaded",
+    "retry": "Try Again"
+  },
+  "properties": {
+    "title": "Properties",
+    "noSelection": "Select an element to view its properties",
+    "position": "Position",
+    "size": "Size",
+    "rotation": "Rotation",
+    "opacity": "Opacity",
+    "fontSize": "Font Size",
+    "fontFamily": "Font Family",
+    "color": "Color",
+    "bold": "Bold",
+    "italic": "Italic",
+    "strokeColor": "Stroke Color",
+    "strokeWidth": "Stroke Width",
+    "aspectRatioLock": "Lock Aspect Ratio"
+  },
+  "toolConfig": {
+    "brushSize": "Brush Size",
+    "color": "Color",
+    "fontSize": "Font Size",
+    "bold": "Bold",
+    "italic": "Italic",
+    "opacity": "Opacity"
+  },
+  "signature": {
+    "title": "Draw Signature",
+    "clear": "Clear",
+    "cancel": "Cancel",
+    "apply": "Apply",
+    "instruction": "Draw your signature below"
+  },
+  "pageManagement": {
+    "deletePage": "Delete Page",
+    "deleteSelected": "Delete Selected ({count})",
+    "rotateCW": "Rotate Clockwise",
+    "rotateCCW": "Rotate Counterclockwise",
+    "extractPage": "Extract Page",
+    "extractSelected": "Extract Selected",
+    "confirmDelete": "Are you sure you want to delete {count} page(s)?",
+    "reorderHint": "Drag to reorder pages"
+  },
+  "merge": {
+    "title": "Merge PDF Files",
+    "description": "Add PDF files to merge with the current document",
+    "addFiles": "Add Files",
+    "fileCount": "{count} files ready",
+    "totalPages": "Total: {count} pages",
+    "merging": "Merging...",
+    "merge": "Merge All",
+    "cancel": "Cancel",
+    "dragToReorder": "Drag to reorder",
+    "currentDocument": "Current document"
+  },
+  "split": {
+    "title": "Split PDF",
+    "extractPages": "Extract Pages",
+    "splitAtPage": "Split at Page",
+    "selectPages": "Select pages to extract",
+    "splitPoint": "Split after page",
+    "download": "Download",
+    "downloadPart1": "Download Part 1 (Pages 1-{page})",
+    "downloadPart2": "Download Part 2 (Pages {page}-{total})",
+    "noSelection": "Select at least one page",
+    "cancel": "Cancel"
+  },
+  "file": {
+    "menu": "File",
+    "open": "Open PDF",
+    "merge": "Merge PDFs",
+    "split": "Split PDF",
+    "close": "Close Document",
+    "download": "Download PDF"
+  },
+  "form": {
+    "fillableField": "Fillable field",
+    "required": "Required",
+    "optional": "Optional",
+    "textField": "Text Field",
+    "checkbox": "Checkbox",
+    "dropdown": "Dropdown",
+    "radio": "Radio Button"
+  },
+  "export": {
+    "title": "Export PDF",
+    "exporting": "Exporting PDF...",
+    "preparing": "Preparing document...",
+    "processingPage": "Processing page {current} of {total}...",
+    "embedding": "Embedding annotations...",
+    "finalizing": "Finalizing document...",
+    "complete": "Export complete!",
+    "download": "Download PDF",
+    "downloadAgain": "Download Again",
+    "cancel": "Cancel",
+    "flattenForms": "Flatten form fields",
+    "flattenFormsDesc": "Make form values permanent (non-editable)",
+    "includeAnnotations": "Include annotations",
+    "quality": "Export Quality",
+    "qualityStandard": "Standard",
+    "qualityHigh": "High"
+  }
+}
