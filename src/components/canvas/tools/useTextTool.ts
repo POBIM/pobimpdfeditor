@@ -15,7 +15,7 @@ export function useTextTool(
     }
 
     canvas.isDrawingMode = false;
-    canvas.selection = false;
+    canvas.selection = true;
     canvas.skipTargetFind = false;
     canvas.defaultCursor = 'text';
 

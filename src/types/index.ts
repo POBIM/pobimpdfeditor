@@ -9,6 +9,8 @@ export type EditorTool =
   | 'signature'
   | 'eraser';
 
+export type EditorMode = 'view' | 'edit';
+
 export type ZoomLevel = number;
 
 export const ZOOM_PRESETS = [50, 75, 100, 125, 150, 200] as const;
@@ -28,6 +30,7 @@ export interface PdfState {
 }
 
 export interface EditorState {
+  editorMode: EditorMode;
   activeTool: EditorTool;
   sidebarOpen: boolean;
   propertiesPanelOpen: boolean;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Canvas, type TPointerEventInfo } from 'fabric';
 import { useEditor } from '@/store/EditorContext';
 import { getEmptyCanvasState, useCanvas } from '@/store/CanvasContext';
@@ -16,6 +16,7 @@ interface FabricCanvasProps {
   width: number;
   height: number;
   scale: number;
+  isEditable: boolean;
 }
 
 function scaleCanvasObjects(canvas: Canvas, oldWidth: number, oldHeight: number, newWidth: number, newHeight: number) {
@@ -41,7 +42,13 @@ function serializeCanvas(canvas: Canvas) {
   return JSON.stringify(canvas.toJSON());
 }
 
-export default function FabricCanvas({ pageNumber, width, height, scale }: FabricCanvasProps) {
+export default function FabricCanvas({
+  pageNumber,
+  width,
+  height,
+  scale,
+  isEditable,
+}: FabricCanvasProps) {
   const { activeTool, toolConfig, setPropertiesPanelOpen } = useEditor();
   const {
     registerCanvas,
@@ -60,27 +67,25 @@ export default function FabricCanvas({ pageNumber, width, height, scale }: Fabri
   const fabricRef = useRef<Canvas | null>(null);
   const isRestoringRef = useRef(false);
   const previousSizeRef = useRef<{ width: number; height: number } | null>(null);
-  const [objectCount, setObjectCount] = useState(0);
 
   useEffect(() => {
-    if (!canvasElementRef.current || width <= 0 || height <= 0) {
+    if (!canvasElementRef.current) {
       return;
     }
 
+    let cancelled = false;
+
     const canvas = new Canvas(canvasElementRef.current, {
-      width,
-      height,
       preserveObjectStacking: true,
       selection: true,
       backgroundColor: undefined,
     });
 
     fabricRef.current = canvas;
-    previousSizeRef.current = { width, height };
+    previousSizeRef.current = { width: canvas.getWidth(), height: canvas.getHeight() };
     registerCanvas(pageNumber, canvas);
     const initialState = getPageSerializedState(pageNumber) ?? getEmptyCanvasState();
     initializePageHistory(pageNumber, initialState);
-    setObjectCount(0);
 
     const handlePointerDown = (event: TPointerEventInfo) => {
       setActiveCanvas(pageNumber);
@@ -99,8 +104,6 @@ export default function FabricCanvas({ pageNumber, width, height, scale }: Fabri
     };
 
     const syncState = () => {
-      setObjectCount(canvas.getObjects().length);
-
       if (isRestoringRef.current) {
         return;
       }
@@ -119,16 +122,29 @@ export default function FabricCanvas({ pageNumber, width, height, scale }: Fabri
     if (initialState !== getEmptyCanvasState()) {
       const restoreInitialState = async () => {
         isRestoringRef.current = true;
-        await canvas.loadFromJSON(initialState);
-        canvas.requestRenderAll();
-        setObjectCount(canvas.getObjects().length);
-        isRestoringRef.current = false;
+
+        try {
+          await canvas.loadFromJSON(initialState);
+
+          if (cancelled || fabricRef.current !== canvas) {
+            return;
+          }
+
+          canvas.requestRenderAll();
+        } catch (error) {
+          if (!cancelled && fabricRef.current === canvas) {
+            console.error('Failed to restore initial canvas state:', error);
+          }
+        } finally {
+          isRestoringRef.current = false;
+        }
       };
 
       void restoreInitialState();
     }
 
     return () => {
+      cancelled = true;
       canvas.off('mouse:down', handlePointerDown);
       canvas.off('selection:created', handleSelectionCreated);
       canvas.off('selection:updated', handleSelectionCreated);
@@ -136,17 +152,15 @@ export default function FabricCanvas({ pageNumber, width, height, scale }: Fabri
       canvas.off('object:added', syncState);
       canvas.off('object:modified', syncState);
       canvas.off('object:removed', syncState);
+      isRestoringRef.current = false;
       setSelectedObject(null, null);
       unregisterCanvas(pageNumber);
       canvas.dispose();
       fabricRef.current = null;
       previousSizeRef.current = null;
-      setObjectCount(0);
     };
   }, [
     pageNumber,
-    width,
-    height,
     registerCanvas,
     unregisterCanvas,
     setActiveCanvas,
@@ -189,22 +203,41 @@ export default function FabricCanvas({ pageNumber, width, height, scale }: Fabri
       return;
     }
 
+    let cancelled = false;
+
     const restoreState = async () => {
       isRestoringRef.current = true;
-      await canvas.loadFromJSON(restoreRequest.serializedState);
-      canvas.discardActiveObject();
-      canvas.requestRenderAll();
-      setSelectedObject(null, null);
-      setObjectCount(canvas.getObjects().length);
-      isRestoringRef.current = false;
+
+      try {
+        await canvas.loadFromJSON(restoreRequest.serializedState);
+
+        if (cancelled || fabricRef.current !== canvas) {
+          return;
+        }
+
+        canvas.discardActiveObject();
+        canvas.requestRenderAll();
+        setSelectedObject(null, null);
+      } catch (error) {
+        if (!cancelled && fabricRef.current === canvas) {
+          console.error('Failed to restore canvas history state:', error);
+        }
+      } finally {
+        isRestoringRef.current = false;
+      }
     };
 
     void restoreState();
+
+    return () => {
+      cancelled = true;
+      isRestoringRef.current = false;
+    };
   }, [restoreRequest, pageNumber, setSelectedObject]);
 
   useEffect(() => {
     const canvas = getCanvas(pageNumber);
-    if (!canvas || activeTool !== 'signature') {
+    if (!canvas || !isEditable || activeTool !== 'signature') {
       return;
     }
 
@@ -223,29 +256,38 @@ export default function FabricCanvas({ pageNumber, width, height, scale }: Fabri
       canvas.off('mouse:down', handleSignaturePlacement);
       canvas.defaultCursor = 'default';
     };
-  }, [pageNumber, activeTool, getCanvas, openSignaturePad]);
+  }, [pageNumber, isEditable, activeTool, getCanvas, openSignaturePad]);
 
-  useSelectTool(fabricRef.current, activeTool === 'select');
-  useTextTool(fabricRef.current, activeTool === 'text', toolConfig.text);
-  useDrawTool(fabricRef.current, activeTool === 'draw', toolConfig.draw);
-  useHighlightTool(fabricRef.current, activeTool === 'highlight', toolConfig.highlight);
-  useImageTool(fabricRef.current, activeTool === 'image');
-  useEraserTool(fabricRef.current, activeTool === 'eraser');
+  useSelectTool(fabricRef.current, isEditable && activeTool === 'select');
+  useTextTool(fabricRef.current, isEditable && activeTool === 'text', toolConfig.text);
+  useDrawTool(fabricRef.current, isEditable && activeTool === 'draw', toolConfig.draw);
+  useHighlightTool(
+    fabricRef.current,
+    isEditable && activeTool === 'highlight',
+    toolConfig.highlight
+  );
+  useImageTool(fabricRef.current, isEditable && activeTool === 'image');
+  useEraserTool(fabricRef.current, isEditable && activeTool === 'eraser');
 
-  const pointerClass = useMemo(() => {
-    if (activeTool === 'select' && objectCount === 0) {
-      return 'pointer-events-none';
+  useEffect(() => {
+    const canvas = fabricRef.current;
+    if (!canvas) {
+      return;
     }
 
-    return 'pointer-events-auto';
-  }, [activeTool, objectCount]);
+    const pointerEvents =
+      !isEditable ? 'none' : 'auto';
+
+    canvas.lowerCanvasEl.style.pointerEvents = pointerEvents;
+    canvas.upperCanvasEl.style.pointerEvents = pointerEvents;
+  }, [isEditable]);
 
   return (
     <canvas
       ref={canvasElementRef}
       width={Math.max(1, Math.round(width))}
       height={Math.max(1, Math.round(height))}
-      className={`absolute inset-0 z-10 ${pointerClass}`}
+      className="h-full w-full"
     />
   );
 }

@@ -10,6 +10,8 @@
     "english": "English"
   },
   "toolbar": {
+    "viewMode": "View",
+    "editMode": "Edit",
     "select": "Select",
     "text": "Text",
     "draw": "Draw",
@@ -59,6 +61,16 @@
   "properties": {
     "title": "Properties",
     "noSelection": "Select an element to view its properties",
+    "propertyProfile": "Object Type",
+    "profileText": "Text",
+    "profileDraw": "Drawing",
+    "profileImage": "Image",
+    "profileGeneric": "Element",
+    "transformSection": "Transform",
+    "textSection": "Text",
+    "drawSection": "Drawing",
+    "imageSection": "Image",
+    "textContent": "Text Content",
     "position": "Position",
     "size": "Size",
     "rotation": "Rotation",

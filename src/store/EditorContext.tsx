@@ -8,9 +8,10 @@ import {
   useMemo,
   type ReactNode,
 } from 'react';
-import type { EditorState, EditorTool, ToolConfigState } from '@/types';
+import type { EditorState, EditorMode, EditorTool, ToolConfigState } from '@/types';
 
 interface EditorContextValue extends EditorState {
+  setEditorMode: (mode: EditorMode) => void;
   setActiveTool: (tool: EditorTool) => void;
   setToolConfig: (tool: keyof ToolConfigState, config: Partial<ToolConfigState[keyof ToolConfigState]>) => void;
   toggleSidebar: () => void;
@@ -41,11 +42,16 @@ const EditorContext = createContext<EditorContextValue | null>(null);
 
 export function EditorProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<EditorState>({
+    editorMode: 'view',
     activeTool: 'select',
     sidebarOpen: true,
     propertiesPanelOpen: false,
     toolConfig: DEFAULT_TOOL_CONFIG,
   });
+
+  const setEditorMode = useCallback((mode: EditorMode) => {
+    setState((prev) => ({ ...prev, editorMode: mode }));
+  }, []);
 
   const setActiveTool = useCallback((tool: EditorTool) => {
     setState((prev) => ({ ...prev, activeTool: tool }));
@@ -89,6 +95,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
   const value = useMemo<EditorContextValue>(
     () => ({
         ...state,
+        setEditorMode,
         setActiveTool,
         setToolConfig,
         toggleSidebar,
@@ -96,7 +103,16 @@ export function EditorProvider({ children }: { children: ReactNode }) {
         togglePropertiesPanel,
         setPropertiesPanelOpen,
       }),
-    [state, setActiveTool, setToolConfig, toggleSidebar, setSidebarOpen, togglePropertiesPanel, setPropertiesPanelOpen]
+    [
+      state,
+      setEditorMode,
+      setActiveTool,
+      setToolConfig,
+      toggleSidebar,
+      setSidebarOpen,
+      togglePropertiesPanel,
+      setPropertiesPanelOpen,
+    ]
   );
 
   return (

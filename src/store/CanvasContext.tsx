@@ -79,12 +79,17 @@ export function CanvasProvider({ children }: { children: ReactNode }) {
   const [activePageNumber, setActivePageNumber] = useState<number | null>(null);
   const [selectedObject, setSelectedObjectState] = useState<FabricObject | null>(null);
   const [selectedPageNumber, setSelectedPageNumber] = useState<number | null>(null);
+  const selectedPageNumberRef = useRef<number | null>(null);
   const [restoreRequest, setRestoreRequest] = useState<CanvasRestoreRequest | null>(null);
   const [signatureRequest, setSignatureRequest] = useState<SignatureRequest>({
     isOpen: false,
     pageNumber: null,
     point: null,
   });
+
+  useEffect(() => {
+    selectedPageNumberRef.current = selectedPageNumber;
+  }, [selectedPageNumber]);
 
   useEffect(() => {
     void documentSession;
@@ -110,13 +115,13 @@ export function CanvasProvider({ children }: { children: ReactNode }) {
 
   const unregisterCanvas = useCallback((pageNumber: number) => {
     canvasesRef.current.delete(pageNumber);
-    pageStateRef.current.delete(pageNumber);
-    pointerRef.current.delete(pageNumber);
 
-    setSelectedObjectState((prev) => (selectedPageNumber === pageNumber ? null : prev));
+    setSelectedObjectState((prev) =>
+      selectedPageNumberRef.current === pageNumber ? null : prev
+    );
     setSelectedPageNumber((prev) => (prev === pageNumber ? null : prev));
     setActivePageNumber((prev) => (prev === pageNumber ? null : prev));
-  }, [selectedPageNumber]);
+  }, []);
 
   const getCanvas = useCallback((pageNumber: number) => {
     return canvasesRef.current.get(pageNumber) ?? null;

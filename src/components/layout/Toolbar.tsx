@@ -29,24 +29,78 @@ export default function Toolbar() {
   const tZoom = useTranslations('zoom');
   const tPages = useTranslations('pages');
   const tExport = useTranslations('export');
-  const { activeTool, setActiveTool } = useEditor();
-  const { undo, redo, canUndo, canRedo } = useCanvas();
+  const { editorMode, activeTool, setEditorMode, setActiveTool } = useEditor();
+  const { undo, redo, canUndo, canRedo, setActiveCanvas } = useCanvas();
   const { openExport } = useExport();
   const { currentPage, numPages, setCurrentPage, zoom, zoomIn, zoomOut, pdfFile } =
     usePdf();
 
   const hasPdf = pdfFile !== null;
 
+  const handleModeChange = (mode: 'view' | 'edit') => {
+    setEditorMode(mode);
+    if (mode === 'edit' && numPages > 0) {
+      setActiveCanvas(currentPage);
+      return;
+    }
+
+    setActiveCanvas(null);
+  };
+
+  const handleToolSelect = (tool: EditorTool) => {
+    if (editorMode === 'view') {
+      setEditorMode('edit');
+    }
+
+    if (numPages > 0) {
+      setActiveCanvas(currentPage);
+    }
+
+    setActiveTool(tool);
+  };
+
+  const goToPage = (page: number) => {
+    const nextPage = Math.max(1, Math.min(page, numPages));
+    setCurrentPage(nextPage);
+
+    if (editorMode === 'edit') {
+      setActiveCanvas(nextPage);
+    }
+  };
+
   return (
     <div className="flex items-center h-11 px-2 bg-surface-700 border-b border-border-subtle shrink-0 z-20 gap-0.5 overflow-x-auto">
+      {hasPdf && (
+        <div className="flex items-center gap-0.5">
+          <ToolButton
+            active={editorMode === 'view'}
+            label={t('viewMode')}
+            onClick={() => handleModeChange('view')}
+            className="w-auto px-2.5"
+          >
+            <span className="text-[11px] leading-none font-semibold select-none">{t('viewMode')}</span>
+          </ToolButton>
+          <ToolButton
+            active={editorMode === 'edit'}
+            label={t('editMode')}
+            onClick={() => handleModeChange('edit')}
+            className="w-auto px-2.5"
+          >
+            <span className="text-[11px] leading-none font-semibold select-none">{t('editMode')}</span>
+          </ToolButton>
+        </div>
+      )}
+
+      {hasPdf && <div className="w-px h-5 bg-border-default mx-2 shrink-0" />}
+
       <div className="flex items-center gap-0.5">
         {TOOLS.map((tool) => (
           <ToolButton
             key={tool.id}
             active={activeTool === tool.id}
             label={t(tool.labelKey)}
-            onClick={() => setActiveTool(tool.id)}
-            disabled={!hasPdf && tool.id !== 'select'}
+            onClick={() => handleToolSelect(tool.id)}
+            disabled={!hasPdf || editorMode === 'view'}
           >
             <span className="text-base leading-none select-none">{tool.icon}</span>
           </ToolButton>
@@ -56,14 +110,14 @@ export default function Toolbar() {
       <div className="w-px h-5 bg-border-default mx-2 shrink-0" />
 
       <div className="flex items-center gap-0.5">
-        <ToolButton label={t('undo')} onClick={undo} disabled={!hasPdf || !canUndo}>
+        <ToolButton label={t('undo')} onClick={undo} disabled={!hasPdf || editorMode === 'view' || !canUndo}>
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true" role="img">
             <title>{t('undo')}</title>
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h10a5 5 0 015 5v0a5 5 0 01-5 5H8" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M7 6L3 10l4 4" />
           </svg>
         </ToolButton>
-        <ToolButton label={t('redo')} onClick={redo} disabled={!hasPdf || !canRedo}>
+        <ToolButton label={t('redo')} onClick={redo} disabled={!hasPdf || editorMode === 'view' || !canRedo}>
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true" role="img">
             <title>{t('redo')}</title>
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 10H11a5 5 0 00-5 5v0a5 5 0 005 5h5" />
@@ -106,7 +160,7 @@ export default function Toolbar() {
           <div className="flex items-center gap-1">
             <ToolButton
               label={tPages('previous')}
-              onClick={() => setCurrentPage(currentPage - 1)}
+              onClick={() => goToPage(currentPage - 1)}
               disabled={currentPage <= 1}
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true" role="img">
@@ -119,7 +173,7 @@ export default function Toolbar() {
             </span>
             <ToolButton
               label={tPages('next')}
-              onClick={() => setCurrentPage(currentPage + 1)}
+              onClick={() => goToPage(currentPage + 1)}
               disabled={currentPage >= numPages}
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true" role="img">

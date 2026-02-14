@@ -10,6 +10,8 @@
     "english": "English"
   },
   "toolbar": {
+    "viewMode": "ดู",
+    "editMode": "แก้ไข",
     "select": "เลือก",
     "text": "ข้อความ",
     "draw": "วาด",
@@ -59,6 +61,16 @@
   "properties": {
     "title": "คุณสมบัติ",
     "noSelection": "เลือกองค์ประกอบเพื่อดูคุณสมบัติ",
+    "propertyProfile": "ประเภทวัตถุ",
+    "profileText": "ข้อความ",
+    "profileDraw": "เส้นวาด",
+    "profileImage": "รูปภาพ",
+    "profileGeneric": "องค์ประกอบ",
+    "transformSection": "การจัดวาง",
+    "textSection": "ข้อความ",
+    "drawSection": "การวาด",
+    "imageSection": "รูปภาพ",
+    "textContent": "เนื้อความ",
     "position": "ตำแหน่ง",
     "size": "ขนาด",
     "rotation": "การหมุน",

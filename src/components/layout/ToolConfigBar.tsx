@@ -5,9 +5,15 @@ import { useEditor } from '@/store/EditorContext';
 
 export default function ToolConfigBar() {
   const t = useTranslations('toolConfig');
-  const { activeTool, toolConfig, setToolConfig } = useEditor();
+  const { editorMode, activeTool, toolConfig, setToolConfig } = useEditor();
 
-  if (activeTool === 'select' || activeTool === 'image' || activeTool === 'signature' || activeTool === 'eraser') {
+  if (
+    editorMode === 'view' ||
+    activeTool === 'select' ||
+    activeTool === 'image' ||
+    activeTool === 'signature' ||
+    activeTool === 'eraser'
+  ) {
     return null;
   }
 

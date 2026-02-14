@@ -101,6 +101,49 @@ function getCanvasHasRenderableContent(canvas: Canvas) {
   return canvas.getObjects().length > 0;
 }
 
+function getOverlayPlacement(
+  pageWidth: number,
+  pageHeight: number,
+  rotationDegrees: number
+) {
+  const normalizedRotation = normalizeRotation(rotationDegrees);
+
+  switch (normalizedRotation) {
+    case 90:
+      return {
+        x: pageWidth,
+        y: 0,
+        width: pageHeight,
+        height: pageWidth,
+        rotation: 90,
+      };
+    case 180:
+      return {
+        x: pageWidth,
+        y: pageHeight,
+        width: pageWidth,
+        height: pageHeight,
+        rotation: 180,
+      };
+    case 270:
+      return {
+        x: 0,
+        y: pageHeight,
+        width: pageHeight,
+        height: pageWidth,
+        rotation: 270,
+      };
+    default:
+      return {
+        x: 0,
+        y: 0,
+        width: pageWidth,
+        height: pageHeight,
+        rotation: 0,
+      };
+  }
+}
+
 export async function exportPdf(params: ExportParams): Promise<ArrayBuffer> {
   const {
     currentPdfBytes,
@@ -132,7 +175,15 @@ export async function exportPdf(params: ExportParams): Promise<ArrayBuffer> {
 
     const pageNumber = pageIndex + 1;
     const page = pages[pageIndex];
-    const pageRotation = normalizeRotation(pageRotations.get(pageNumber) ?? 0);
+    const rotationOverride = pageRotations.get(pageNumber);
+    if (rotationOverride !== undefined) {
+      const normalizedOverride = normalizeRotation(rotationOverride);
+      if (normalizeRotation(page.getRotation().angle) !== normalizedOverride) {
+        page.setRotation(degrees(normalizedOverride));
+      }
+    }
+
+    const pageRotation = normalizeRotation(page.getRotation().angle);
 
     emitProgress(onProgress, {
       step: 'processingPage',
@@ -140,10 +191,6 @@ export async function exportPdf(params: ExportParams): Promise<ArrayBuffer> {
       totalPages,
       percentage: Math.round(5 + ((pageIndex + 1) / totalPages) * 65),
     });
-
-    if (pageRotation !== 0) {
-      page.setRotation(degrees(pageRotation));
-    }
 
     if (includeAnnotations) {
       const canvas = canvases.get(pageNumber);
@@ -161,11 +208,18 @@ export async function exportPdf(params: ExportParams): Promise<ArrayBuffer> {
         });
 
         const pngImage = await pdfDoc.embedPng(canvasDataUrl);
+        const overlayPlacement = getOverlayPlacement(
+          page.getWidth(),
+          page.getHeight(),
+          pageRotation
+        );
+
         page.drawImage(pngImage, {
-          x: 0,
-          y: 0,
-          width: page.getWidth(),
-          height: page.getHeight(),
+          x: overlayPlacement.x,
+          y: overlayPlacement.y,
+          width: overlayPlacement.width,
+          height: overlayPlacement.height,
+          rotate: degrees(overlayPlacement.rotation),
         });
       }
     }

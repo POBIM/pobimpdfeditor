@@ -8,6 +8,8 @@ import 'react-pdf/dist/Page/TextLayer.css';
 import '@/lib/pdfWorker';
 import { useTranslations } from 'next-intl';
 import { usePdf } from '@/store/PdfContext';
+import { useEditor } from '@/store/EditorContext';
+import { useCanvas } from '@/store/CanvasContext';
 import FabricCanvas from '@/components/canvas/FabricCanvas';
 import FormLayer from '@/components/pdf/FormLayer';
 
@@ -19,6 +21,8 @@ function PageSkeleton() {
 
 export default function PdfViewer() {
   const t = useTranslations('viewer');
+  const { editorMode } = useEditor();
+  const { activePageNumber } = useCanvas();
   const {
     pdfFile,
     numPages,
@@ -32,6 +36,8 @@ export default function PdfViewer() {
   const pageRefs = useRef<Map<number, HTMLDivElement>>(new Map());
   const containerRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const currentPageRef = useRef(currentPage);
+  const isObserverDrivenPageChangeRef = useRef(false);
   const [pageSizes, setPageSizes] = useState<Record<number, { width: number; height: number }>>({});
 
   const scale = zoom / 100;
@@ -39,6 +45,7 @@ export default function PdfViewer() {
   const onDocumentLoadSuccess = useCallback(
     ({ numPages: n }: { numPages: number }) => {
       setNumPages(n);
+      setPageSizes({});
     },
     [setNumPages]
   );
@@ -52,12 +59,16 @@ export default function PdfViewer() {
   }, []);
 
   useEffect(() => {
+    currentPageRef.current = currentPage;
+  }, [currentPage]);
+
+  useEffect(() => {
     if (!containerRef.current || numPages === 0) return;
 
     observerRef.current = new IntersectionObserver(
       (entries) => {
         let maxRatio = 0;
-        let visiblePage = currentPage;
+        let visiblePage: number | null = null;
 
         entries.forEach((entry) => {
           if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
@@ -69,7 +80,12 @@ export default function PdfViewer() {
           }
         });
 
-        if (maxRatio > 0) {
+        if (
+          maxRatio > 0 &&
+          visiblePage !== null &&
+          visiblePage !== currentPageRef.current
+        ) {
+          isObserverDrivenPageChangeRef.current = true;
           setCurrentPage(visiblePage);
         }
       },
@@ -86,7 +102,7 @@ export default function PdfViewer() {
     return () => {
       observerRef.current?.disconnect();
     };
-  }, [numPages, setCurrentPage, currentPage]);
+  }, [numPages, setCurrentPage]);
 
   const scrollToPage = useCallback((page: number) => {
     const el = pageRefs.current.get(page);
@@ -96,6 +112,11 @@ export default function PdfViewer() {
   }, []);
 
   useEffect(() => {
+    if (isObserverDrivenPageChangeRef.current) {
+      isObserverDrivenPageChangeRef.current = false;
+      return;
+    }
+
     const el = pageRefs.current.get(currentPage);
     if (el && containerRef.current) {
       const containerRect = containerRef.current.getBoundingClientRect();
@@ -114,30 +135,53 @@ export default function PdfViewer() {
     return { data: new Uint8Array(pdfFile.slice(0)), source: pdfFile };
   }, [pdfFile]);
 
-  if (!fileData) {
-    return null;
-  }
+  const updatePageSize = useCallback((pageNum: number, fallbackWidth: number, fallbackHeight: number) => {
+    const wrapper = pageRefs.current.get(pageNum);
+    const canvas = wrapper?.querySelector<HTMLCanvasElement>('.react-pdf__Page__canvas');
+    const measuredWidth = canvas?.getBoundingClientRect().width ?? fallbackWidth;
+    const measuredHeight = canvas?.getBoundingClientRect().height ?? fallbackHeight;
 
-  const handlePageRenderSuccess = (pageNum: number, page: PageCallback) => {
+    if (measuredWidth <= 0 || measuredHeight <= 0) {
+      return;
+    }
+
     setPageSizes((prev) => {
       const current = prev[pageNum];
-      if (current && current.width === page.width && current.height === page.height) {
+      if (current && current.width === measuredWidth && current.height === measuredHeight) {
         return prev;
       }
 
       return {
         ...prev,
         [pageNum]: {
-          width: page.width,
-          height: page.height,
+          width: measuredWidth,
+          height: measuredHeight,
         },
       };
     });
-  };
+  }, []);
+
+  const handlePageRenderSuccess = useCallback(
+    (pageNum: number, page: PageCallback) => {
+      const viewport = page.getViewport({
+        scale,
+        rotation: pageRotations.get(pageNum) ?? 0,
+      });
+
+      requestAnimationFrame(() => {
+        updatePageSize(pageNum, viewport.width, viewport.height);
+      });
+    },
+    [scale, pageRotations, updatePageSize]
+  );
+
+  if (!fileData) {
+    return null;
+  }
 
   return (
     <div ref={containerRef} className="h-full overflow-auto">
-      <div className="flex flex-col items-center gap-6 py-8 px-4 min-h-full">
+      <div className="flex flex-col items-center gap-10 py-10 px-4 min-h-full">
         <Document
           key={pdfRevision}
           file={fileData}
@@ -163,10 +207,12 @@ export default function PdfViewer() {
               key={`${pdfRevision}-${pageNum}`}
               ref={(el) => setPageRef(pageNum, el)}
               data-page={pageNum}
-              className="relative bg-canvas-page rounded shadow-lg shadow-canvas-shadow"
+              className="relative overflow-hidden bg-canvas-page rounded-md border-2 border-surface-300/45 shadow-lg shadow-canvas-shadow"
               style={{
                 animationDelay: `${Math.min(pageNum * 50, 300)}ms`,
                 animation: 'slide-up-fade 400ms cubic-bezier(0.16, 1, 0.3, 1) backwards',
+                width: pageSizes[pageNum]?.width,
+                height: pageSizes[pageNum]?.height,
               }}
             >
               <Page
@@ -187,12 +233,15 @@ export default function PdfViewer() {
                     pageHeight={pageSizes[pageNum].height}
                     rotation={pageRotations.get(pageNum) ?? 0}
                   />
-                  <FabricCanvas
-                    pageNumber={pageNum}
-                    width={pageSizes[pageNum].width}
-                    height={pageSizes[pageNum].height}
-                    scale={scale}
-                  />
+                  <div className="absolute inset-0 z-10">
+                    <FabricCanvas
+                      pageNumber={pageNum}
+                      width={pageSizes[pageNum].width}
+                      height={pageSizes[pageNum].height}
+                      scale={scale}
+                      isEditable={editorMode === 'edit' && (activePageNumber ?? currentPage) === pageNum}
+                    />
+                  </div>
                 </>
               )}
             </div>

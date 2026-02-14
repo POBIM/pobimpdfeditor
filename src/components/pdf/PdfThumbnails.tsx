@@ -10,11 +10,13 @@ import Button from '@/components/ui/Button';
 import PageManagementBar from '@/components/pdf/PageManagementBar';
 import { usePdf } from '@/store/PdfContext';
 import { useCanvas } from '@/store/CanvasContext';
+import { useEditor } from '@/store/EditorContext';
 import { deletePages, reorderPages, rotatePage, splitPdf } from '@/lib/pdfOperations';
 import { downloadPdf } from '@/lib/downloadHelper';
 
 export default function PdfThumbnails() {
   const t = useTranslations('pageManagement');
+  const { editorMode } = useEditor();
   const {
     pdfFile,
     numPages,
@@ -28,7 +30,7 @@ export default function PdfThumbnails() {
     fileName,
     pdfRevision,
   } = usePdf();
-  const { remapCanvasPages, removeCanvasPages } = useCanvas();
+  const { remapCanvasPages, removeCanvasPages, setActiveCanvas } = useCanvas();
 
   const [selectedPages, setSelectedPages] = useState<number[]>([]);
   const [draggedPage, setDraggedPage] = useState<number | null>(null);
@@ -89,9 +91,12 @@ export default function PdfThumbnails() {
       }
 
       setCurrentPage(page);
+      if (editorMode === 'edit') {
+        setActiveCanvas(page);
+      }
       setMenuPage(null);
     },
-    [setCurrentPage]
+    [editorMode, setActiveCanvas, setCurrentPage]
   );
 
   const handleExtractPages = useCallback(
@@ -270,56 +275,58 @@ export default function PdfThumbnails() {
                     <div className="mb-1 h-1.5 w-[172px] rounded-full bg-accent-500/80" />
                   )}
 
-                  <button
-                    type="button"
-                    draggable
-                    onDragStart={() => {
-                      setDraggedPage(pageNum);
-                      setDropIndex(index);
-                    }}
-                    onDragOver={(event) => {
-                      event.preventDefault();
-                      const rect = event.currentTarget.getBoundingClientRect();
-                      const shouldInsertBefore = event.clientY < rect.top + rect.height / 2;
-                      setDropIndex(shouldInsertBefore ? index : index + 1);
-                    }}
-                    onDrop={(event) => {
-                      event.preventDefault();
-                      const target = dropIndex ?? index;
-                      void handleReorderDrop(target);
-                      setDraggedPage(null);
-                      setDropIndex(null);
-                    }}
-                    onDragEnd={() => {
-                      setDraggedPage(null);
-                      setDropIndex(null);
-                    }}
-                    onContextMenu={(event) => {
-                      event.preventDefault();
-                      setSelectedPages((prev) => (prev.includes(pageNum) ? prev : [pageNum]));
-                      setMenuPage((prev) => (prev === pageNum ? null : pageNum));
-                    }}
-                    onClick={(event) => handleThumbnailClick(event, pageNum)}
-                    className={`group relative w-[164px] overflow-hidden rounded-md transition-all duration-200 cursor-pointer
-                      ${
-                        isCurrent
-                          ? 'ring-2 ring-accent-500 ring-offset-2 ring-offset-surface-800 shadow-lg shadow-accent-500/10'
-                          : 'ring-1 ring-border-subtle hover:ring-border-strong'
-                      }
-                      ${isSelected ? 'bg-accent-500/10' : ''}
-                      ${draggedPage === pageNum ? 'opacity-45' : ''}`}
-                  >
-                    <Page
-                      pageNumber={pageNum}
-                      width={160}
-                      rotate={pageRotations.get(pageNum) ?? 0}
-                      renderTextLayer={false}
-                      renderAnnotationLayer={false}
-                    />
+                  <div className="relative w-[164px]">
+                    <button
+                      type="button"
+                      draggable
+                      onDragStart={() => {
+                        setDraggedPage(pageNum);
+                        setDropIndex(index);
+                      }}
+                      onDragOver={(event) => {
+                        event.preventDefault();
+                        const rect = event.currentTarget.getBoundingClientRect();
+                        const shouldInsertBefore = event.clientY < rect.top + rect.height / 2;
+                        setDropIndex(shouldInsertBefore ? index : index + 1);
+                      }}
+                      onDrop={(event) => {
+                        event.preventDefault();
+                        const target = dropIndex ?? index;
+                        void handleReorderDrop(target);
+                        setDraggedPage(null);
+                        setDropIndex(null);
+                      }}
+                      onDragEnd={() => {
+                        setDraggedPage(null);
+                        setDropIndex(null);
+                      }}
+                      onContextMenu={(event) => {
+                        event.preventDefault();
+                        setSelectedPages((prev) => (prev.includes(pageNum) ? prev : [pageNum]));
+                        setMenuPage((prev) => (prev === pageNum ? null : pageNum));
+                      }}
+                      onClick={(event) => handleThumbnailClick(event, pageNum)}
+                      className={`group relative w-full overflow-hidden rounded-md transition-all duration-200 cursor-pointer
+                        ${
+                          isCurrent
+                            ? 'ring-2 ring-accent-500 ring-offset-2 ring-offset-surface-800 shadow-lg shadow-accent-500/10'
+                            : 'ring-1 ring-border-subtle hover:ring-border-strong'
+                        }
+                        ${isSelected ? 'bg-accent-500/10' : ''}
+                        ${draggedPage === pageNum ? 'opacity-45' : ''}`}
+                    >
+                      <Page
+                        pageNumber={pageNum}
+                        width={160}
+                        rotate={pageRotations.get(pageNum) ?? 0}
+                        renderTextLayer={false}
+                        renderAnnotationLayer={false}
+                      />
 
-                    <span className="absolute left-1 top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-surface-900/90 px-1 text-[10px] font-mono text-white tabular-nums">
-                      {pageNum}
-                    </span>
+                      <span className="absolute left-1 top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-surface-900/90 px-1 text-[10px] font-mono text-white tabular-nums">
+                        {pageNum}
+                      </span>
+                    </button>
 
                     {menuPage === pageNum && (
                       <div className="absolute right-1 top-1 z-20 w-40 rounded-md border border-border-default bg-surface-700 shadow-xl shadow-black/30">
@@ -353,7 +360,7 @@ export default function PdfThumbnails() {
                         </button>
                       </div>
                     )}
-                  </button>
+                  </div>
 
                   {showDropAfter && (
                     <div className="mt-1 h-1.5 w-[172px] rounded-full bg-accent-500/80" />
