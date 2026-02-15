@@ -44,6 +44,7 @@ export interface EditorState {
 
 export interface TextToolConfig {
   fontSize: number;
+  fontFamily: string;
   color: string;
   bold: boolean;
   italic: boolean;

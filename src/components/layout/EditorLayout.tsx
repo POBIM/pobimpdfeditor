@@ -74,13 +74,13 @@ export default function EditorLayout({ children }: EditorLayoutProps) {
   }, [isFullscreen, handleExitFullscreen]);
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden">
+    <div data-editor-shell className="flex flex-col h-screen w-screen overflow-hidden">
       {!isFullscreen && <Header />}
       {!isFullscreen && <Toolbar />}
       {!isFullscreen && <ToolConfigBar />}
-      <div className="flex flex-1 min-h-0">
+      <div data-editor-content className="flex flex-1 min-h-0">
         {!isFullscreen && <Sidebar />}
-        <main className="flex-1 min-w-0 bg-canvas-bg relative overflow-auto">
+        <main data-print-main className="flex-1 min-w-0 bg-canvas-bg relative overflow-auto">
           {children}
 
           {isFullscreen && (

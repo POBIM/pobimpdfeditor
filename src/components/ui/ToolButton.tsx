@@ -29,7 +29,7 @@ export default function ToolButton({
         disabled:opacity-40 disabled:pointer-events-none
         ${
           active
-            ? 'bg-accent-500/15 text-accent-400 shadow-[inset_0_0_0_1px_rgba(255,107,74,0.3)]'
+            ? 'bg-accent-500/15 text-accent-400 shadow-[inset_0_0_0_1px] shadow-accent-500/30'
             : 'text-text-secondary hover:bg-surface-500 hover:text-text-primary active:bg-surface-400'
         } ${className}`}
       {...props}

@@ -34,8 +34,8 @@
   --color-border-strong: var(--theme-border-strong);
 
   /* Fonts — will be set by next/font */
-  --font-display: var(--font-dm-sans), "DM Sans", var(--font-noto-thai), "Noto Sans Thai", system-ui, sans-serif;
-  --font-body: var(--font-dm-sans), "DM Sans", var(--font-noto-thai), "Noto Sans Thai", system-ui, sans-serif;
+  --font-display: var(--font-dm-sans), "DM Sans", var(--font-sarabun), "Sarabun", var(--font-noto-thai), "Noto Sans Thai", system-ui, sans-serif;
+  --font-body: var(--font-dm-sans), "DM Sans", var(--font-sarabun), "Sarabun", var(--font-noto-thai), "Noto Sans Thai", system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), "JetBrains Mono", monospace;
 
   /* Spacing scale */
@@ -61,105 +61,110 @@
 
 :root,
 :root[data-theme='base'] {
-  --theme-surface-900: #17120f;
-  --theme-surface-800: #201915;
-  --theme-surface-700: #2a211c;
-  --theme-surface-600: #362a23;
-  --theme-surface-500: #48372d;
-  --theme-surface-400: #5f4a3b;
-  --theme-surface-300: #7a624f;
-  --theme-surface-200: #a18469;
-  --theme-surface-100: #ccb293;
+  /* Comfortable dark-slate with subtle blue-gray warmth */
+  --theme-surface-900: #131619;
+  --theme-surface-800: #1a1e23;
+  --theme-surface-700: #22272e;
+  --theme-surface-600: #2b323b;
+  --theme-surface-500: #39414e;
+  --theme-surface-400: #4e5869;
+  --theme-surface-300: #677286;
+  --theme-surface-200: #8c96ab;
+  --theme-surface-100: #b5bdd0;
 
-  --theme-text-primary: #f5ecdf;
-  --theme-text-secondary: #cdbca7;
-  --theme-text-tertiary: #9f8a73;
-  --theme-text-inverse: #1f1712;
+  /* Soft whites — bright enough to read, gentle on eyes */
+  --theme-text-primary: #e9ecf4;
+  --theme-text-secondary: #a8b2c8;
+  --theme-text-tertiary: #717d97;
+  --theme-text-inverse: #141720;
 
-  --theme-accent-500: #c7743f;
-  --theme-accent-400: #dd8d59;
-  --theme-accent-600: #a85c30;
-  --theme-accent-glow: rgb(199 116 63 / 0.2);
+  /* Fresh sky-blue accent — vibrant but not harsh */
+  --theme-accent-500: #4e9ef5;
+  --theme-accent-400: #74b8fc;
+  --theme-accent-600: #3280d6;
+  --theme-accent-glow: rgb(78 158 245 / 0.18);
 
-  --theme-canvas-bg: #d9c9b5;
-  --theme-canvas-page: #fffaf2;
-  --theme-canvas-shadow: rgb(36 22 14 / 0.24);
+  --theme-canvas-bg: #c5cedf;
+  --theme-canvas-page: #ffffff;
+  --theme-canvas-shadow: rgb(19 22 25 / 0.22);
 
-  --theme-success: #4ade80;
+  --theme-success: #34d399;
   --theme-warning: #fbbf24;
   --theme-error: #f87171;
 
-  --theme-border-subtle: rgb(255 240 220 / 0.08);
-  --theme-border-default: rgb(255 236 210 / 0.14);
-  --theme-border-strong: rgb(255 232 204 / 0.24);
+  --theme-border-subtle: rgb(160 185 220 / 0.08);
+  --theme-border-default: rgb(160 185 220 / 0.14);
+  --theme-border-strong: rgb(160 185 220 / 0.22);
 }
 
 :root[data-theme='light'] {
-  --theme-surface-900: #f4f6fa;
+  /* Clean, airy light theme */
+  --theme-surface-900: #f5f7fb;
   --theme-surface-800: #ffffff;
-  --theme-surface-700: #eef2f8;
-  --theme-surface-600: #e4eaf3;
-  --theme-surface-500: #d4ddea;
-  --theme-surface-400: #bcc8dc;
-  --theme-surface-300: #9fb0ca;
-  --theme-surface-200: #7e93b3;
-  --theme-surface-100: #627898;
+  --theme-surface-700: #f0f3f9;
+  --theme-surface-600: #e6ebf5;
+  --theme-surface-500: #d6deee;
+  --theme-surface-400: #bfc9de;
+  --theme-surface-300: #a2b1cb;
+  --theme-surface-200: #8196b4;
+  --theme-surface-100: #647b9b;
 
   --theme-text-primary: #111827;
-  --theme-text-secondary: #334155;
-  --theme-text-tertiary: #64748b;
+  --theme-text-secondary: #374151;
+  --theme-text-tertiary: #6b7280;
   --theme-text-inverse: #0f172a;
 
-  --theme-accent-500: #2563eb;
-  --theme-accent-400: #3b82f6;
-  --theme-accent-600: #1d4ed8;
-  --theme-accent-glow: rgb(37 99 235 / 0.18);
+  --theme-accent-500: #3b82f6;
+  --theme-accent-400: #60a5fa;
+  --theme-accent-600: #2563eb;
+  --theme-accent-glow: rgb(59 130 246 / 0.16);
 
-  --theme-canvas-bg: #dee7f3;
+  --theme-canvas-bg: #e2e8f4;
   --theme-canvas-page: #ffffff;
-  --theme-canvas-shadow: rgb(15 23 42 / 0.16);
+  --theme-canvas-shadow: rgb(15 23 42 / 0.12);
 
   --theme-success: #16a34a;
-  --theme-warning: #ca8a04;
+  --theme-warning: #d97706;
   --theme-error: #dc2626;
 
-  --theme-border-subtle: rgb(15 23 42 / 0.08);
-  --theme-border-default: rgb(15 23 42 / 0.15);
-  --theme-border-strong: rgb(15 23 42 / 0.24);
+  --theme-border-subtle: rgb(15 23 42 / 0.06);
+  --theme-border-default: rgb(15 23 42 / 0.12);
+  --theme-border-strong: rgb(15 23 42 / 0.20);
 }
 
 :root[data-theme='dark'] {
-  --theme-surface-900: #06090f;
-  --theme-surface-800: #0d131d;
-  --theme-surface-700: #121a27;
-  --theme-surface-600: #1a2433;
-  --theme-surface-500: #243041;
-  --theme-surface-400: #334257;
-  --theme-surface-300: #4d607c;
-  --theme-surface-200: #7084a3;
-  --theme-surface-100: #9cabc9;
+  /* Deep navy — true dark mode, high contrast */
+  --theme-surface-900: #080b11;
+  --theme-surface-800: #0f1319;
+  --theme-surface-700: #151a23;
+  --theme-surface-600: #1c222e;
+  --theme-surface-500: #262e3d;
+  --theme-surface-400: #364054;
+  --theme-surface-300: #4e5d78;
+  --theme-surface-200: #7283a1;
+  --theme-surface-100: #9daccb;
 
-  --theme-text-primary: #e6edf9;
-  --theme-text-secondary: #9fb0ca;
-  --theme-text-tertiary: #6f82a3;
-  --theme-text-inverse: #09111f;
+  --theme-text-primary: #e8edf8;
+  --theme-text-secondary: #a0b0ca;
+  --theme-text-tertiary: #6c7ea2;
+  --theme-text-inverse: #0a0e16;
 
-  --theme-accent-500: #22d3ee;
-  --theme-accent-400: #67e8f9;
-  --theme-accent-600: #06b6d4;
-  --theme-accent-glow: rgb(34 211 238 / 0.16);
+  --theme-accent-500: #38bdf8;
+  --theme-accent-400: #7dd3fc;
+  --theme-accent-600: #0ea5e9;
+  --theme-accent-glow: rgb(56 189 248 / 0.16);
 
-  --theme-canvas-bg: #0a111b;
-  --theme-canvas-page: #f9fafb;
+  --theme-canvas-bg: #0c111c;
+  --theme-canvas-page: #fafbfc;
   --theme-canvas-shadow: rgb(2 6 23 / 0.45);
 
   --theme-success: #34d399;
   --theme-warning: #f59e0b;
   --theme-error: #fb7185;
 
-  --theme-border-subtle: rgb(148 163 184 / 0.14);
-  --theme-border-default: rgb(148 163 184 / 0.2);
-  --theme-border-strong: rgb(148 163 184 / 0.32);
+  --theme-border-subtle: rgb(140 165 200 / 0.10);
+  --theme-border-default: rgb(140 165 200 / 0.18);
+  --theme-border-strong: rgb(140 165 200 / 0.28);
 }
 
 /* Base */
@@ -202,11 +207,11 @@ body {
 @keyframes drop-pulse {
   0%, 100% {
     border-color: var(--color-accent-500);
-    box-shadow: 0 0 0 0 rgba(255, 107, 74, 0.3);
+    box-shadow: 0 0 0 0 var(--color-accent-glow);
   }
   50% {
     border-color: var(--color-accent-400);
-    box-shadow: 0 0 0 8px rgba(255, 107, 74, 0);
+    box-shadow: 0 0 0 8px transparent;
   }
 }
 
@@ -252,4 +257,72 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   pointer-events: none;
   z-index: 1;
+}
+
+@media print {
+  @page {
+    margin: 10mm;
+  }
+
+  html,
+  body {
+    height: auto !important;
+    overflow: visible !important;
+    background: #fff !important;
+  }
+
+  body {
+    color: #000 !important;
+  }
+
+  [data-editor-shell] {
+    display: block !important;
+    width: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  [data-editor-shell] > :not([data-editor-content]) {
+    display: none !important;
+  }
+
+  [data-editor-content] {
+    display: block !important;
+    min-height: auto !important;
+  }
+
+  [data-editor-content] > :not([data-print-main]) {
+    display: none !important;
+  }
+
+  [data-print-main],
+  [data-print-viewer] {
+    overflow: visible !important;
+    height: auto !important;
+    background: #fff !important;
+  }
+
+  [data-print-document] {
+    display: block !important;
+    min-height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  [data-print-page] {
+    margin: 0 auto 8mm !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    break-after: page !important;
+    page-break-after: always !important;
+  }
+
+  [data-print-page]:last-child {
+    margin-bottom: 0 !important;
+    break-after: auto !important;
+    page-break-after: auto !important;
+  }
 }

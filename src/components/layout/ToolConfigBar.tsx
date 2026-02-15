@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useEditor } from '@/store/EditorContext';
 import { usePdf } from '@/store/PdfContext';
+import { TEXT_FONT_OPTIONS } from '@/lib/fontFamilies';
 
 export default function ToolConfigBar() {
   const t = useTranslations('toolConfig');
@@ -21,15 +22,30 @@ export default function ToolConfigBar() {
   }
 
   return (
-    <div className="h-[var(--tool-config-h)] px-3 bg-surface-700 border-b border-border-subtle flex items-center gap-4 shrink-0 overflow-x-auto">
+    <div className="relative z-20 h-[var(--tool-config-h)] px-3 bg-surface-700 border-b border-border-subtle flex items-center gap-4 shrink-0 overflow-x-auto">
       {activeTool === 'text' && (
         <>
+          <label className="flex items-center gap-2 text-[length:var(--tool-label-size)] text-text-secondary">
+            <span>{t('fontFamily')}</span>
+            <select
+              value={toolConfig.text.fontFamily}
+              onChange={(event) => setToolConfig('text', { fontFamily: event.target.value })}
+              className="h-[var(--tool-control-h)] px-2 rounded-[var(--tool-control-radius)] bg-surface-600 border border-border-default text-text-primary text-[length:var(--tool-value-size)] cursor-pointer"
+            >
+              {TEXT_FONT_OPTIONS.map((option) => (
+                <option key={`${option.labelKey}-${option.value}`} value={option.value}>
+                  {t(option.labelKey)}
+                </option>
+              ))}
+            </select>
+          </label>
+
           <label className="flex items-center gap-2 text-[length:var(--tool-label-size)] text-text-secondary">
             <span>{t('fontSize')}</span>
             <select
               value={toolConfig.text.fontSize}
               onChange={(event) => setToolConfig('text', { fontSize: Number(event.target.value) })}
-              className="h-[var(--tool-control-h)] px-2 rounded-[var(--tool-control-radius)] bg-surface-600 border border-border-default text-text-primary text-[length:var(--tool-value-size)]"
+              className="h-[var(--tool-control-h)] px-2 rounded-[var(--tool-control-radius)] bg-surface-600 border border-border-default text-text-primary text-[length:var(--tool-value-size)] cursor-pointer"
             >
               {[12, 14, 16, 18, 24, 32, 48].map((size) => (
                 <option key={size} value={size}>{size}</option>
@@ -224,7 +240,7 @@ export default function ToolConfigBar() {
                   language: event.target.value as 'eng' | 'tha' | 'tha+eng',
                 })
               }
-              className="h-[var(--tool-control-h)] px-2 rounded-[var(--tool-control-radius)] bg-surface-600 border border-border-default text-text-primary text-[length:var(--tool-value-size)]"
+              className="h-[var(--tool-control-h)] px-2 rounded-[var(--tool-control-radius)] bg-surface-600 border border-border-default text-text-primary text-[length:var(--tool-value-size)] cursor-pointer"
             >
               <option value="eng">{t('ocrLanguageEng')}</option>
               <option value="tha">{t('ocrLanguageTha')}</option>
@@ -257,7 +273,7 @@ export default function ToolConfigBar() {
               onChange={(event) =>
                 setToolConfig('ocr', { outputFontSize: Number(event.target.value) })
               }
-              className="h-[var(--tool-control-h)] px-2 rounded-[var(--tool-control-radius)] bg-surface-600 border border-border-default text-text-primary text-[length:var(--tool-value-size)]"
+              className="h-[var(--tool-control-h)] px-2 rounded-[var(--tool-control-radius)] bg-surface-600 border border-border-default text-text-primary text-[length:var(--tool-value-size)] cursor-pointer"
             >
               {[12, 14, 16, 18, 20, 24, 28].map((size) => (
                 <option key={size} value={size}>{size}</option>
@@ -290,7 +306,7 @@ export default function ToolConfigBar() {
                   mode: event.target.value as 'rectangle' | 'polygon',
                 })
               }
-              className="h-[var(--tool-control-h)] px-2 rounded-[var(--tool-control-radius)] bg-surface-600 border border-border-default text-text-primary text-[length:var(--tool-value-size)]"
+              className="h-[var(--tool-control-h)] px-2 rounded-[var(--tool-control-radius)] bg-surface-600 border border-border-default text-text-primary text-[length:var(--tool-value-size)] cursor-pointer"
             >
               <option value="rectangle">{t('areaModeRectangle')}</option>
               <option value="polygon">{t('areaModePolygon')}</option>

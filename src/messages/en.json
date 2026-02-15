@@ -105,6 +105,11 @@
   "toolConfig": {
     "brushSize": "Brush Size",
     "color": "Color",
+    "fontFamily": "Font Family",
+    "fontFamilyDefault": "Default",
+    "fontFamilySarabun": "Sarabun",
+    "fontFamilyNotoThai": "Noto Sans Thai",
+    "fontFamilyDMSans": "DM Sans",
     "fontSize": "Font Size",
     "bold": "Bold",
     "italic": "Italic",

@@ -24,6 +24,7 @@ interface EditorContextValue extends EditorState {
 const DEFAULT_TOOL_CONFIG: ToolConfigState = {
   text: {
     fontSize: 16,
+    fontFamily: 'var(--font-body)',
     color: '#111111',
     bold: false,
     italic: false,

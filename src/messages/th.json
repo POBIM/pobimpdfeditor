@@ -105,6 +105,11 @@
   "toolConfig": {
     "brushSize": "ขนาดแปรง",
     "color": "สี",
+    "fontFamily": "แบบอักษร",
+    "fontFamilyDefault": "ค่าเริ่มต้น",
+    "fontFamilySarabun": "Sarabun",
+    "fontFamilyNotoThai": "Noto Sans Thai",
+    "fontFamilyDMSans": "DM Sans",
     "fontSize": "ขนาดอักษร",
     "bold": "ตัวหนา",
     "italic": "ตัวเอียง",

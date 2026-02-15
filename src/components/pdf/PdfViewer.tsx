@@ -180,8 +180,8 @@ export default function PdfViewer() {
   }
 
   return (
-    <div ref={containerRef} className="h-full overflow-auto">
-      <div className="flex flex-col items-center gap-10 py-10 px-4 min-h-full">
+    <div ref={containerRef} data-print-viewer className="h-full overflow-auto">
+      <div data-print-document className="flex flex-col items-center gap-10 py-10 px-4 min-h-full">
         <Document
           key={pdfRevision}
           file={fileData}
@@ -207,6 +207,7 @@ export default function PdfViewer() {
               key={`${pdfRevision}-${pageNum}`}
               ref={(el) => setPageRef(pageNum, el)}
               data-page={pageNum}
+              data-print-page
               className="relative overflow-hidden bg-canvas-page rounded-md border-2 border-surface-300/45 shadow-lg shadow-canvas-shadow"
               style={{
                 animationDelay: `${Math.min(pageNum * 50, 300)}ms`,

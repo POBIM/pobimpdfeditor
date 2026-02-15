@@ -6,6 +6,7 @@ import type { FabricObject } from 'fabric';
 import { useCanvas } from '@/store/CanvasContext';
 import { useEditor } from '@/store/EditorContext';
 import { usePdf } from '@/store/PdfContext';
+import { TEXT_FONT_OPTIONS, getFontOptionValue, resolveCanvasFontFamily } from '@/lib/fontFamilies';
 
 function isTextObject(object: FabricObject) {
   return object.type === 'i-text' || object.type === 'text';
@@ -76,6 +77,7 @@ function getElementDisplayName(object: FabricObject, index: number) {
 
 export default function PropertiesPanel() {
   const t = useTranslations('properties');
+  const tToolConfig = useTranslations('toolConfig');
   const { editorMode, propertiesPanelOpen, setPropertiesPanelOpen } = useEditor();
   const { currentPage } = usePdf();
   const {
@@ -388,12 +390,21 @@ export default function PropertiesPanel() {
 
                   <label className="block text-xs text-text-secondary">
                     {t('fontFamily')}
-                    <input
-                      type="text"
-                      defaultValue={String(selectedObject.get('fontFamily') ?? 'sans-serif')}
-                      onChange={(event) => applyObjectUpdate({ fontFamily: event.target.value })}
+                    <select
+                      value={getFontOptionValue(String(selectedObject.get('fontFamily') ?? ''))}
+                      onChange={(event) =>
+                        applyObjectUpdate({
+                          fontFamily: resolveCanvasFontFamily(event.target.value),
+                        })
+                      }
                       className="mt-1 w-full h-8 px-2 rounded bg-surface-700 border border-border-default text-text-primary"
-                    />
+                    >
+                      {TEXT_FONT_OPTIONS.map((option) => (
+                        <option key={`properties-${option.labelKey}-${option.value}`} value={option.value}>
+                          {tToolConfig(option.labelKey)}
+                        </option>
+                      ))}
+                    </select>
                   </label>
 
                   <div className="flex gap-2">

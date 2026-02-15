@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { IText, type Canvas, type TPointerEventInfo } from 'fabric';
 import type { TextToolConfig } from '@/types';
+import { resolveCanvasFontFamily } from '@/lib/fontFamilies';
 
 export function useTextTool(
   canvas: Canvas | null,
@@ -28,6 +29,7 @@ export function useTextTool(
         left: event.scenePoint.x,
         top: event.scenePoint.y,
         fontSize: config.fontSize,
+        fontFamily: resolveCanvasFontFamily(config.fontFamily),
         fill: config.color,
         fontWeight: config.bold ? 'bold' : 'normal',
         fontStyle: config.italic ? 'italic' : 'normal',
@@ -46,5 +48,5 @@ export function useTextTool(
       canvas.defaultCursor = 'default';
       canvas.selection = true;
     };
-  }, [canvas, isActive, config.fontSize, config.color, config.bold, config.italic]);
+  }, [canvas, isActive, config.fontSize, config.fontFamily, config.color, config.bold, config.italic]);
 }
