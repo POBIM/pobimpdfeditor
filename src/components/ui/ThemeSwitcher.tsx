@@ -51,7 +51,7 @@ export default function ThemeSwitcher() {
         onClick={() => setOpen((prev) => !prev)}
         aria-label={t('theme')}
         aria-expanded={open}
-        className="flex items-center gap-1.5 h-7 px-2 rounded text-xs font-medium
+        className="flex items-center gap-1.5 h-[var(--tool-control-h)] px-2 rounded-[var(--tool-control-radius)] text-[length:var(--tool-value-size)] font-medium
           text-text-secondary hover:text-text-primary hover:bg-surface-600
           transition-colors duration-150 cursor-pointer"
       >
@@ -86,7 +86,7 @@ export default function ThemeSwitcher() {
               type="button"
               key={item.code}
               onClick={() => handleSelect(item.code)}
-              className={`flex items-center gap-2 w-full px-3 py-2 text-xs font-medium transition-colors cursor-pointer
+              className={`flex items-center gap-2 w-full px-3 py-2 text-[length:var(--tool-value-size)] font-medium transition-colors cursor-pointer
                 ${
                   item.code === theme
                     ? 'text-accent-400 bg-accent-500/10'

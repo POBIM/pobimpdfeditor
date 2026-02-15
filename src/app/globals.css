@@ -34,14 +34,26 @@
   --color-border-strong: var(--theme-border-strong);
 
   /* Fonts — will be set by next/font */
-  --font-display: var(--font-dm-sans), "DM Sans", system-ui, sans-serif;
-  --font-body: var(--font-dm-sans), "DM Sans", system-ui, sans-serif;
+  --font-display: var(--font-dm-sans), "DM Sans", var(--font-noto-thai), "Noto Sans Thai", system-ui, sans-serif;
+  --font-body: var(--font-dm-sans), "DM Sans", var(--font-noto-thai), "Noto Sans Thai", system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), "JetBrains Mono", monospace;
 
   /* Spacing scale */
   --spacing-toolbar: 44px;
   --spacing-header: 48px;
   --spacing-sidebar: 220px;
+
+  /* Tool UI tokens — consistent sizing across all tool surfaces */
+  --tool-btn-size: 30px;
+  --tool-btn-radius: 6px;
+  --tool-btn-icon: 15px;
+  --tool-config-h: 36px;
+  --tool-control-h: 26px;
+  --tool-control-radius: 5px;
+  --tool-label-size: 11.5px;
+  --tool-value-size: 11px;
+  --tool-mode-size: 11px;
+  --tool-icon-size: 14px;
 
   /* Transitions */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);

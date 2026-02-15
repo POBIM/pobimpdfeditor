@@ -20,7 +20,11 @@ export default function ToolButton({
       title={label}
       aria-label={label}
       aria-pressed={active}
-      className={`relative flex items-center justify-center w-8 h-8 rounded-md text-sm transition-all duration-150 cursor-pointer
+      className={`relative flex items-center justify-center
+        w-[var(--tool-btn-size)] h-[var(--tool-btn-size)]
+        rounded-[var(--tool-btn-radius)] text-[length:var(--tool-label-size)]
+        font-medium leading-none
+        transition-all duration-150 cursor-pointer
         focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-500
         disabled:opacity-40 disabled:pointer-events-none
         ${

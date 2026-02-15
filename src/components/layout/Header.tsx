@@ -52,7 +52,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="flex items-center h-12 px-4 bg-surface-800 border-b border-border-subtle shrink-0 z-30">
+        <header className="flex items-center h-[var(--spacing-header)] px-4 bg-surface-800 border-b border-border-subtle shrink-0 z-30">
         <div className="flex items-center gap-3 min-w-0">
           <div className="flex items-center gap-2">
             <svg
@@ -71,7 +71,7 @@ export default function Header() {
                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
               />
             </svg>
-            <h1 className="text-sm font-semibold text-text-primary tracking-tight whitespace-nowrap">
+            <h1 className="text-[length:var(--tool-label-size)] font-semibold text-text-primary tracking-tight whitespace-nowrap">
               {tApp('title')}
             </h1>
           </div>
@@ -79,7 +79,7 @@ export default function Header() {
           {fileName && (
             <>
               <span className="text-text-tertiary select-none">/</span>
-              <span className="text-xs text-text-secondary truncate max-w-[200px]">{fileName}</span>
+              <span className="text-[length:var(--tool-value-size)] text-text-secondary truncate max-w-[200px]">{fileName}</span>
             </>
           )}
         </div>
@@ -91,7 +91,7 @@ export default function Header() {
             type="button"
             onClick={openExport}
             disabled={!pdfFile}
-            className="flex items-center gap-1.5 h-7 px-2.5 rounded bg-accent-500/15 text-xs font-medium text-accent-400 hover:bg-accent-500/25 transition-colors duration-150 cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
+            className="flex items-center gap-1.5 h-[var(--tool-control-h)] px-2.5 rounded-[var(--tool-control-radius)] bg-accent-500/15 text-[length:var(--tool-value-size)] font-medium text-accent-400 hover:bg-accent-500/25 transition-colors duration-150 cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true" role="img">
               <title>{tExport('download')}</title>
@@ -111,7 +111,7 @@ export default function Header() {
             <button
               type="button"
               onClick={() => setMenuOpen((prev) => !prev)}
-              className="flex items-center gap-1.5 h-7 px-2.5 rounded text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-surface-600 transition-colors duration-150 cursor-pointer"
+              className="flex items-center gap-1.5 h-[var(--tool-control-h)] px-2.5 rounded-[var(--tool-control-radius)] text-[length:var(--tool-value-size)] font-medium text-text-secondary hover:text-text-primary hover:bg-surface-600 transition-colors duration-150 cursor-pointer"
             >
               <span>{tFile('menu')}</span>
               <svg
@@ -133,7 +133,7 @@ export default function Header() {
                 <button
                   type="button"
                   onClick={() => openInputRef.current?.click()}
-                  className="w-full px-3 py-2 text-left text-xs text-text-secondary hover:bg-surface-600 hover:text-text-primary"
+                  className="w-full px-3 py-2 text-left text-[length:var(--tool-value-size)] text-text-secondary hover:bg-surface-600 hover:text-text-primary"
                 >
                   {tFile('open')}
                 </button>
@@ -144,7 +144,7 @@ export default function Header() {
                     setMenuOpen(false);
                   }}
                   disabled={!pdfFile}
-                  className="w-full px-3 py-2 text-left text-xs text-text-secondary hover:bg-surface-600 hover:text-text-primary disabled:opacity-40 disabled:pointer-events-none"
+                  className="w-full px-3 py-2 text-left text-[length:var(--tool-value-size)] text-text-secondary hover:bg-surface-600 hover:text-text-primary disabled:opacity-40 disabled:pointer-events-none"
                 >
                   {tFile('merge')}
                 </button>
@@ -155,7 +155,7 @@ export default function Header() {
                     setMenuOpen(false);
                   }}
                   disabled={!pdfFile}
-                  className="w-full px-3 py-2 text-left text-xs text-text-secondary hover:bg-surface-600 hover:text-text-primary disabled:opacity-40 disabled:pointer-events-none"
+                  className="w-full px-3 py-2 text-left text-[length:var(--tool-value-size)] text-text-secondary hover:bg-surface-600 hover:text-text-primary disabled:opacity-40 disabled:pointer-events-none"
                 >
                   {tFile('split')}
                 </button>
@@ -166,7 +166,7 @@ export default function Header() {
                     setMenuOpen(false);
                   }}
                   disabled={!pdfFile}
-                  className="w-full px-3 py-2 text-left text-xs text-text-secondary hover:bg-surface-600 hover:text-text-primary disabled:opacity-40 disabled:pointer-events-none"
+                  className="w-full px-3 py-2 text-left text-[length:var(--tool-value-size)] text-text-secondary hover:bg-surface-600 hover:text-text-primary disabled:opacity-40 disabled:pointer-events-none"
                 >
                   {tFile('download')}
                 </button>
@@ -177,7 +177,7 @@ export default function Header() {
                     setMenuOpen(false);
                   }}
                   disabled={!pdfFile}
-                  className="w-full px-3 py-2 text-left text-xs text-error hover:bg-surface-600 disabled:opacity-40 disabled:pointer-events-none"
+                  className="w-full px-3 py-2 text-left text-[length:var(--tool-value-size)] text-error hover:bg-surface-600 disabled:opacity-40 disabled:pointer-events-none"
                 >
                   {tFile('close')}
                 </button>

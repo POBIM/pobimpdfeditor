@@ -21,9 +21,9 @@ const variantClasses: Record<ButtonVariant, string> = {
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
-  sm: 'h-7 px-2.5 text-xs gap-1.5 rounded',
-  md: 'h-8 px-3 text-sm gap-2 rounded-md',
-  lg: 'h-10 px-4 text-sm gap-2.5 rounded-lg',
+  sm: 'h-[var(--tool-control-h)] px-2.5 text-[length:var(--tool-value-size)] gap-1.5 rounded-[var(--tool-control-radius)]',
+  md: 'h-[var(--tool-btn-size)] px-3 text-[length:var(--tool-label-size)] gap-2 rounded-[var(--tool-btn-radius)]',
+  lg: 'h-[var(--tool-config-h)] px-4 text-[length:var(--tool-label-size)] gap-2.5 rounded-lg',
 };
 
 export default function Button({

@@ -159,7 +159,7 @@ export default function Toolbar() {
 
   return (
     <>
-      <div className="flex items-center h-11 px-2 bg-surface-700 border-b border-border-subtle shrink-0 z-20 gap-0.5 overflow-x-auto">
+      <div className="flex items-center h-[var(--spacing-toolbar)] px-2 bg-surface-700 border-b border-border-subtle shrink-0 z-20 gap-0.5 overflow-x-auto">
         {hasPdf && (
           <div className="flex items-center gap-0.5">
             <ToolButton
@@ -168,7 +168,7 @@ export default function Toolbar() {
               onClick={() => handleModeChange('view')}
               className="w-auto px-2.5"
             >
-              <span className="text-[11px] leading-none font-semibold select-none">{t('viewMode')}</span>
+              <span className="text-[length:var(--tool-mode-size)] leading-none font-semibold select-none">{t('viewMode')}</span>
             </ToolButton>
             <ToolButton
               active={editorMode === 'edit'}
@@ -176,7 +176,7 @@ export default function Toolbar() {
               onClick={() => handleModeChange('edit')}
               className="w-auto px-2.5"
             >
-              <span className="text-[11px] leading-none font-semibold select-none">{t('editMode')}</span>
+              <span className="text-[length:var(--tool-mode-size)] leading-none font-semibold select-none">{t('editMode')}</span>
             </ToolButton>
           </div>
         )}
@@ -192,7 +192,7 @@ export default function Toolbar() {
               onClick={() => handleToolSelect(tool.id)}
               disabled={!hasPdf || editorMode === 'view'}
             >
-              <span className="text-base leading-none select-none">{tool.icon}</span>
+              <span className="text-[length:var(--tool-btn-icon)] leading-none select-none">{tool.icon}</span>
             </ToolButton>
           ))}
         </div>
@@ -201,14 +201,14 @@ export default function Toolbar() {
 
         <div className="flex items-center gap-0.5">
           <ToolButton label={t('undo')} onClick={undo} disabled={!hasPdf || editorMode === 'view' || !canUndo}>
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true" role="img">
+            <svg className="w-[var(--tool-icon-size)] h-[var(--tool-icon-size)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true" role="img">
               <title>{t('undo')}</title>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h10a5 5 0 015 5v0a5 5 0 01-5 5H8" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M7 6L3 10l4 4" />
             </svg>
           </ToolButton>
           <ToolButton label={t('redo')} onClick={redo} disabled={!hasPdf || editorMode === 'view' || !canRedo}>
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true" role="img">
+            <svg className="w-[var(--tool-icon-size)] h-[var(--tool-icon-size)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true" role="img">
               <title>{t('redo')}</title>
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 10H11a5 5 0 00-5 5v0a5 5 0 005 5h5" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 6l4 4-4 4" />
@@ -224,14 +224,14 @@ export default function Toolbar() {
             onClick={() => setDonateOpen(true)}
             className="w-auto gap-1.5 px-2.5"
           >
-            <span className="text-sm leading-none select-none" aria-hidden="true">❤</span>
-            <span className="text-[11px] leading-none font-semibold select-none">{t('donate')}</span>
+            <span className="text-[length:var(--tool-icon-size)] leading-none select-none" aria-hidden="true">❤</span>
+            <span className="text-[length:var(--tool-mode-size)] leading-none font-semibold select-none">{t('donate')}</span>
           </ToolButton>
 
           {hasPdf && (
             <div className="flex items-center gap-2">
               <ToolButton label={tExport('download')} onClick={openExport}>
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true" role="img">
+                <svg className="w-[var(--tool-icon-size)] h-[var(--tool-icon-size)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true" role="img">
                   <title>{tExport('download')}</title>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v12m0 0l4-4m-4 4l-4-4M5 21h14" />
                 </svg>
@@ -241,23 +241,23 @@ export default function Toolbar() {
                 label={isFullscreen ? t('exitFullscreen') : t('fullscreen')}
                 onClick={toggleFullscreen}
               >
-                <span className="text-base leading-none select-none">
+                <span className="text-[length:var(--tool-btn-icon)] leading-none select-none">
                   {isFullscreen ? '⤡' : '⤢'}
                 </span>
               </ToolButton>
 
               <div className="flex items-center gap-1">
                 <ToolButton label={tZoom('zoomOut')} onClick={zoomOut}>
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true" role="img">
+                  <svg className="w-[var(--tool-icon-size)] h-[var(--tool-icon-size)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true" role="img">
                     <title>{tZoom('zoomOut')}</title>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" />
                   </svg>
                 </ToolButton>
-                <span className="text-xs text-text-secondary font-mono w-10 text-center tabular-nums select-none">
+                <span className="text-[length:var(--tool-value-size)] text-text-secondary font-mono w-10 text-center tabular-nums select-none">
                   {zoom}%
                 </span>
                 <ToolButton label={tZoom('zoomIn')} onClick={zoomIn}>
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true" role="img">
+                  <svg className="w-[var(--tool-icon-size)] h-[var(--tool-icon-size)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true" role="img">
                     <title>{tZoom('zoomIn')}</title>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
                   </svg>
@@ -272,12 +272,12 @@ export default function Toolbar() {
                   onClick={() => goToPage(currentPage - 1)}
                   disabled={currentPage <= 1}
                 >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true" role="img">
+                  <svg className="w-[var(--tool-icon-size)] h-[var(--tool-icon-size)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true" role="img">
                     <title>{tPages('previous')}</title>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                   </svg>
                 </ToolButton>
-                <span className="text-xs text-text-secondary font-mono tabular-nums select-none whitespace-nowrap">
+                <span className="text-[length:var(--tool-value-size)] text-text-secondary font-mono tabular-nums select-none whitespace-nowrap">
                   {currentPage} / {numPages}
                 </span>
                 <ToolButton
@@ -285,7 +285,7 @@ export default function Toolbar() {
                   onClick={() => goToPage(currentPage + 1)}
                   disabled={currentPage >= numPages}
                 >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true" role="img">
+                  <svg className="w-[var(--tool-icon-size)] h-[var(--tool-icon-size)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true" role="img">
                     <title>{tPages('next')}</title>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
@@ -311,8 +311,8 @@ export default function Toolbar() {
             className="w-full max-w-sm overflow-hidden rounded-xl border border-border-default bg-surface-800 shadow-xl"
           >
             <div className="border-b border-border-subtle px-5 py-4">
-              <h3 className="text-sm font-semibold text-text-primary">{t('donateTitle')}</h3>
-              <p className="mt-1 text-xs text-text-secondary">{t('donateSubtitle')}</p>
+              <h3 className="text-[length:var(--tool-label-size)] font-semibold text-text-primary">{t('donateTitle')}</h3>
+              <p className="mt-1 text-[length:var(--tool-value-size)] text-text-secondary">{t('donateSubtitle')}</p>
             </div>
 
             <div className="space-y-4 p-5">
@@ -326,7 +326,7 @@ export default function Toolbar() {
                   />
                 </div>
               ) : (
-                <div className="mx-auto flex h-56 w-56 items-center justify-center rounded-lg border border-dashed border-border-default bg-surface-700 px-4 text-center text-xs text-text-secondary">
+                <div className="mx-auto flex h-56 w-56 items-center justify-center rounded-lg border border-dashed border-border-default bg-surface-700 px-4 text-center text-[length:var(--tool-value-size)] text-text-secondary">
                   {t('donateQrMissing')}
                 </div>
               )}
@@ -336,7 +336,7 @@ export default function Toolbar() {
               <button
                 type="button"
                 onClick={() => setDonateOpen(false)}
-                className="h-8 rounded-md border border-border-default px-3 text-xs text-text-secondary transition-colors hover:bg-surface-600 hover:text-text-primary"
+                className="h-[var(--tool-control-h)] rounded-[var(--tool-control-radius)] border border-border-default px-3 text-[length:var(--tool-value-size)] text-text-secondary transition-colors hover:bg-surface-600 hover:text-text-primary"
               >
                 {t('closeDonate')}
               </button>

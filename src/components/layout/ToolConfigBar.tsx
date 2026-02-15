@@ -21,15 +21,15 @@ export default function ToolConfigBar() {
   }
 
   return (
-    <div className="h-10 px-3 bg-surface-700 border-b border-border-subtle flex items-center gap-4 shrink-0 overflow-x-auto">
+    <div className="h-[var(--tool-config-h)] px-3 bg-surface-700 border-b border-border-subtle flex items-center gap-4 shrink-0 overflow-x-auto">
       {activeTool === 'text' && (
         <>
-          <label className="flex items-center gap-2 text-xs text-text-secondary">
+          <label className="flex items-center gap-2 text-[length:var(--tool-label-size)] text-text-secondary">
             <span>{t('fontSize')}</span>
             <select
               value={toolConfig.text.fontSize}
               onChange={(event) => setToolConfig('text', { fontSize: Number(event.target.value) })}
-              className="h-7 px-2 rounded bg-surface-600 border border-border-default text-text-primary text-xs"
+              className="h-[var(--tool-control-h)] px-2 rounded-[var(--tool-control-radius)] bg-surface-600 border border-border-default text-text-primary text-[length:var(--tool-value-size)]"
             >
               {[12, 14, 16, 18, 24, 32, 48].map((size) => (
                 <option key={size} value={size}>{size}</option>
@@ -37,20 +37,20 @@ export default function ToolConfigBar() {
             </select>
           </label>
 
-          <label className="flex items-center gap-2 text-xs text-text-secondary">
+          <label className="flex items-center gap-2 text-[length:var(--tool-label-size)] text-text-secondary">
             <span>{t('color')}</span>
             <input
               type="color"
               value={toolConfig.text.color}
               onChange={(event) => setToolConfig('text', { color: event.target.value })}
-              className="h-7 w-9 rounded border border-border-default bg-transparent p-1"
+              className="h-[var(--tool-control-h)] w-9 rounded-[var(--tool-control-radius)] border border-border-default bg-transparent p-1"
             />
           </label>
 
           <button
             type="button"
             onClick={() => setToolConfig('text', { bold: !toolConfig.text.bold })}
-            className={`h-7 px-2.5 rounded border text-xs transition-colors ${
+            className={`h-[var(--tool-control-h)] px-2.5 rounded-[var(--tool-control-radius)] border text-[length:var(--tool-value-size)] transition-colors ${
               toolConfig.text.bold
                 ? 'border-accent-500 text-accent-400 bg-accent-500/10'
                 : 'border-border-default text-text-secondary hover:text-text-primary'
@@ -62,7 +62,7 @@ export default function ToolConfigBar() {
           <button
             type="button"
             onClick={() => setToolConfig('text', { italic: !toolConfig.text.italic })}
-            className={`h-7 px-2.5 rounded border text-xs transition-colors ${
+            className={`h-[var(--tool-control-h)] px-2.5 rounded-[var(--tool-control-radius)] border text-[length:var(--tool-value-size)] transition-colors ${
               toolConfig.text.italic
                 ? 'border-accent-500 text-accent-400 bg-accent-500/10'
                 : 'border-border-default text-text-secondary hover:text-text-primary'
@@ -75,7 +75,7 @@ export default function ToolConfigBar() {
 
       {activeTool === 'draw' && (
         <>
-          <label className="flex items-center gap-2 text-xs text-text-secondary min-w-56">
+          <label className="flex items-center gap-2 text-[length:var(--tool-label-size)] text-text-secondary min-w-56">
             <span>{t('brushSize')}</span>
             <input
               type="range"
@@ -85,16 +85,16 @@ export default function ToolConfigBar() {
               onChange={(event) => setToolConfig('draw', { brushSize: Number(event.target.value) })}
               className="flex-1"
             />
-            <span className="font-mono text-[11px] text-text-primary w-6">{toolConfig.draw.brushSize}</span>
+            <span className="font-mono text-[length:var(--tool-value-size)] text-text-primary w-6">{toolConfig.draw.brushSize}</span>
           </label>
 
-          <label className="flex items-center gap-2 text-xs text-text-secondary">
+          <label className="flex items-center gap-2 text-[length:var(--tool-label-size)] text-text-secondary">
             <span>{t('color')}</span>
             <input
               type="color"
               value={toolConfig.draw.color}
               onChange={(event) => setToolConfig('draw', { color: event.target.value })}
-              className="h-7 w-9 rounded border border-border-default bg-transparent p-1"
+              className="h-[var(--tool-control-h)] w-9 rounded-[var(--tool-control-radius)] border border-border-default bg-transparent p-1"
             />
           </label>
         </>
@@ -102,7 +102,7 @@ export default function ToolConfigBar() {
 
       {activeTool === 'highlight' && (
         <>
-          <label className="flex items-center gap-2 text-xs text-text-secondary min-w-56">
+          <label className="flex items-center gap-2 text-[length:var(--tool-label-size)] text-text-secondary min-w-56">
             <span>{t('brushSize')}</span>
             <input
               type="range"
@@ -112,20 +112,20 @@ export default function ToolConfigBar() {
               onChange={(event) => setToolConfig('highlight', { brushSize: Number(event.target.value) })}
               className="flex-1"
             />
-            <span className="font-mono text-[11px] text-text-primary w-6">{toolConfig.highlight.brushSize}</span>
+            <span className="font-mono text-[length:var(--tool-value-size)] text-text-primary w-6">{toolConfig.highlight.brushSize}</span>
           </label>
 
-          <label className="flex items-center gap-2 text-xs text-text-secondary">
+          <label className="flex items-center gap-2 text-[length:var(--tool-label-size)] text-text-secondary">
             <span>{t('color')}</span>
             <input
               type="color"
               value={toolConfig.highlight.color}
               onChange={(event) => setToolConfig('highlight', { color: event.target.value })}
-              className="h-7 w-9 rounded border border-border-default bg-transparent p-1"
+              className="h-[var(--tool-control-h)] w-9 rounded-[var(--tool-control-radius)] border border-border-default bg-transparent p-1"
             />
           </label>
 
-          <label className="flex items-center gap-2 text-xs text-text-secondary min-w-44">
+          <label className="flex items-center gap-2 text-[length:var(--tool-label-size)] text-text-secondary min-w-44">
             <span>{t('opacity')}</span>
             <input
               type="range"
@@ -136,14 +136,14 @@ export default function ToolConfigBar() {
               onChange={(event) => setToolConfig('highlight', { opacity: Number(event.target.value) })}
               className="flex-1"
             />
-            <span className="font-mono text-[11px] text-text-primary w-10">{Math.round(toolConfig.highlight.opacity * 100)}%</span>
+            <span className="font-mono text-[length:var(--tool-value-size)] text-text-primary w-10">{Math.round(toolConfig.highlight.opacity * 100)}%</span>
           </label>
         </>
       )}
 
       {activeTool === 'measure' && (
         <>
-          <label className="flex items-center gap-2 text-xs text-text-secondary min-w-52">
+          <label className="flex items-center gap-2 text-[length:var(--tool-label-size)] text-text-secondary min-w-52">
             <span>{t('lineWidth')}</span>
             <input
               type="range"
@@ -153,20 +153,20 @@ export default function ToolConfigBar() {
               onChange={(event) => setToolConfig('measure', { lineWidth: Number(event.target.value) })}
               className="flex-1"
             />
-            <span className="font-mono text-[11px] text-text-primary w-6">{toolConfig.measure.lineWidth}</span>
+            <span className="font-mono text-[length:var(--tool-value-size)] text-text-primary w-6">{toolConfig.measure.lineWidth}</span>
           </label>
 
-          <label className="flex items-center gap-2 text-xs text-text-secondary">
+          <label className="flex items-center gap-2 text-[length:var(--tool-label-size)] text-text-secondary">
             <span>{t('color')}</span>
             <input
               type="color"
               value={toolConfig.measure.color}
               onChange={(event) => setToolConfig('measure', { color: event.target.value })}
-              className="h-7 w-9 rounded border border-border-default bg-transparent p-1"
+              className="h-[var(--tool-control-h)] w-9 rounded-[var(--tool-control-radius)] border border-border-default bg-transparent p-1"
             />
           </label>
 
-          <label className="flex items-center gap-2 text-xs text-text-secondary min-w-52">
+          <label className="flex items-center gap-2 text-[length:var(--tool-label-size)] text-text-secondary min-w-52">
             <span>{t('pixelsPerUnit')}</span>
             <input
               type="number"
@@ -180,11 +180,11 @@ export default function ToolConfigBar() {
                   isCalibrated: true,
                 })
               }
-              className="h-7 w-24 px-2 rounded bg-surface-600 border border-border-default text-text-primary text-xs"
+              className="h-[var(--tool-control-h)] w-24 px-2 rounded-[var(--tool-control-radius)] bg-surface-600 border border-border-default text-text-primary text-[length:var(--tool-value-size)]"
             />
           </label>
 
-          <label className="flex items-center gap-2 text-xs text-text-secondary">
+          <label className="flex items-center gap-2 text-[length:var(--tool-label-size)] text-text-secondary">
             <span>{t('unitLabel')}</span>
             <input
               type="text"
@@ -195,7 +195,7 @@ export default function ToolConfigBar() {
                   unitLabel: event.target.value.trim() || 'cm',
                 })
               }
-              className="h-7 w-16 px-2 rounded bg-surface-600 border border-border-default text-text-primary text-xs"
+              className="h-[var(--tool-control-h)] w-16 px-2 rounded-[var(--tool-control-radius)] bg-surface-600 border border-border-default text-text-primary text-[length:var(--tool-value-size)]"
             />
           </label>
 
@@ -206,7 +206,7 @@ export default function ToolConfigBar() {
                 isCalibrated: false,
               })
             }
-            className="h-7 px-2.5 rounded border border-border-default text-xs text-text-secondary hover:text-text-primary transition-colors"
+            className="h-[var(--tool-control-h)] px-2.5 rounded-[var(--tool-control-radius)] border border-border-default text-[length:var(--tool-value-size)] text-text-secondary hover:text-text-primary transition-colors"
           >
             {t('recalibrate')}
           </button>
@@ -215,7 +215,7 @@ export default function ToolConfigBar() {
 
       {activeTool === 'ocr' && (
         <>
-          <label className="flex items-center gap-2 text-xs text-text-secondary">
+          <label className="flex items-center gap-2 text-[length:var(--tool-label-size)] text-text-secondary">
             <span>{t('ocrLanguage')}</span>
             <select
               value={toolConfig.ocr.language}
@@ -224,7 +224,7 @@ export default function ToolConfigBar() {
                   language: event.target.value as 'eng' | 'tha' | 'tha+eng',
                 })
               }
-              className="h-7 px-2 rounded bg-surface-600 border border-border-default text-text-primary text-xs"
+              className="h-[var(--tool-control-h)] px-2 rounded-[var(--tool-control-radius)] bg-surface-600 border border-border-default text-text-primary text-[length:var(--tool-value-size)]"
             >
               <option value="eng">{t('ocrLanguageEng')}</option>
               <option value="tha">{t('ocrLanguageTha')}</option>
@@ -232,7 +232,7 @@ export default function ToolConfigBar() {
             </select>
           </label>
 
-          <label className="flex items-center gap-2 text-xs text-text-secondary min-w-56">
+          <label className="flex items-center gap-2 text-[length:var(--tool-label-size)] text-text-secondary min-w-56">
             <span>{t('minSelectionSize')}</span>
             <input
               type="range"
@@ -247,17 +247,17 @@ export default function ToolConfigBar() {
               }
               className="flex-1"
             />
-            <span className="font-mono text-[11px] text-text-primary w-10">{toolConfig.ocr.minSelectionSize}</span>
+            <span className="font-mono text-[length:var(--tool-value-size)] text-text-primary w-10">{toolConfig.ocr.minSelectionSize}</span>
           </label>
 
-          <label className="flex items-center gap-2 text-xs text-text-secondary">
+          <label className="flex items-center gap-2 text-[length:var(--tool-label-size)] text-text-secondary">
             <span>{t('outputFontSize')}</span>
             <select
               value={toolConfig.ocr.outputFontSize}
               onChange={(event) =>
                 setToolConfig('ocr', { outputFontSize: Number(event.target.value) })
               }
-              className="h-7 px-2 rounded bg-surface-600 border border-border-default text-text-primary text-xs"
+              className="h-[var(--tool-control-h)] px-2 rounded-[var(--tool-control-radius)] bg-surface-600 border border-border-default text-text-primary text-[length:var(--tool-value-size)]"
             >
               {[12, 14, 16, 18, 20, 24, 28].map((size) => (
                 <option key={size} value={size}>{size}</option>
@@ -265,7 +265,7 @@ export default function ToolConfigBar() {
             </select>
           </label>
 
-          <label className="flex items-center gap-2 text-xs text-text-secondary">
+          <label className="flex items-center gap-2 text-[length:var(--tool-label-size)] text-text-secondary">
             <span>{t('color')}</span>
             <input
               type="color"
@@ -273,7 +273,7 @@ export default function ToolConfigBar() {
               onChange={(event) =>
                 setToolConfig('ocr', { outputColor: event.target.value })
               }
-              className="h-7 w-9 rounded border border-border-default bg-transparent p-1"
+              className="h-[var(--tool-control-h)] w-9 rounded-[var(--tool-control-radius)] border border-border-default bg-transparent p-1"
             />
           </label>
         </>
@@ -281,7 +281,7 @@ export default function ToolConfigBar() {
 
       {activeTool === 'measureArea' && (
         <>
-          <label className="flex items-center gap-2 text-xs text-text-secondary">
+          <label className="flex items-center gap-2 text-[length:var(--tool-label-size)] text-text-secondary">
             <span>{t('areaMode')}</span>
             <select
               value={toolConfig.measureArea.mode}
@@ -290,14 +290,14 @@ export default function ToolConfigBar() {
                   mode: event.target.value as 'rectangle' | 'polygon',
                 })
               }
-              className="h-7 px-2 rounded bg-surface-600 border border-border-default text-text-primary text-xs"
+              className="h-[var(--tool-control-h)] px-2 rounded-[var(--tool-control-radius)] bg-surface-600 border border-border-default text-text-primary text-[length:var(--tool-value-size)]"
             >
               <option value="rectangle">{t('areaModeRectangle')}</option>
               <option value="polygon">{t('areaModePolygon')}</option>
             </select>
           </label>
 
-          <label className="flex items-center gap-2 text-xs text-text-secondary min-w-52">
+          <label className="flex items-center gap-2 text-[length:var(--tool-label-size)] text-text-secondary min-w-52">
             <span>{t('lineWidth')}</span>
             <input
               type="range"
@@ -311,12 +311,12 @@ export default function ToolConfigBar() {
               }
               className="flex-1"
             />
-            <span className="font-mono text-[11px] text-text-primary w-6">
+            <span className="font-mono text-[length:var(--tool-value-size)] text-text-primary w-6">
               {toolConfig.measureArea.lineWidth}
             </span>
           </label>
 
-          <label className="flex items-center gap-2 text-xs text-text-secondary">
+          <label className="flex items-center gap-2 text-[length:var(--tool-label-size)] text-text-secondary">
             <span>{t('color')}</span>
             <input
               type="color"
@@ -326,11 +326,11 @@ export default function ToolConfigBar() {
                   color: event.target.value,
                 })
               }
-              className="h-7 w-9 rounded border border-border-default bg-transparent p-1"
+              className="h-[var(--tool-control-h)] w-9 rounded-[var(--tool-control-radius)] border border-border-default bg-transparent p-1"
             />
           </label>
 
-          <label className="flex items-center gap-2 text-xs text-text-secondary min-w-52">
+          <label className="flex items-center gap-2 text-[length:var(--tool-label-size)] text-text-secondary min-w-52">
             <span>{t('fillOpacity')}</span>
             <input
               type="range"
@@ -345,7 +345,7 @@ export default function ToolConfigBar() {
               }
               className="flex-1"
             />
-            <span className="font-mono text-[11px] text-text-primary w-10">
+            <span className="font-mono text-[length:var(--tool-value-size)] text-text-primary w-10">
               {Math.round(toolConfig.measureArea.fillOpacity * 100)}%
             </span>
           </label>

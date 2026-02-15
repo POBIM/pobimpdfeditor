@@ -45,7 +45,7 @@ export default function LanguageSwitcher() {
         onClick={() => setOpen(!open)}
         aria-label={t('language')}
         aria-expanded={open}
-        className="flex items-center gap-1.5 h-7 px-2 rounded text-xs font-medium
+        className="flex items-center gap-1.5 h-[var(--tool-control-h)] px-2 rounded-[var(--tool-control-radius)] text-[length:var(--tool-value-size)] font-medium
           text-text-secondary hover:text-text-primary hover:bg-surface-600
           transition-colors duration-150 cursor-pointer"
       >
@@ -76,7 +76,7 @@ export default function LanguageSwitcher() {
               type="button"
               key={l.code}
               onClick={() => handleSelect(l.code)}
-              className={`flex items-center gap-2 w-full px-3 py-2 text-xs font-medium transition-colors cursor-pointer
+              className={`flex items-center gap-2 w-full px-3 py-2 text-[length:var(--tool-value-size)] font-medium transition-colors cursor-pointer
                 ${
                   l.code === locale
                     ? 'text-accent-400 bg-accent-500/10'
