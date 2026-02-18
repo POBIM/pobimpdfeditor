@@ -40,13 +40,19 @@ const sarabun = Sarabun({
   weight: ['400', '500', '600', '700'],
 });
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+
+const withBasePath = (pathname: string): string => `${basePath}${pathname}`;
+
 export const metadata: Metadata = {
   title: 'POBIM PDF Editor',
   description: 'Professional PDF editing in your browser',
   applicationName: 'POBIM PDF Editor',
-  manifest: '/manifest.webmanifest',
+  manifest: withBasePath('/manifest.webmanifest'),
   icons: {
-    apple: '/icons/apple-touch-icon.png',
+    icon: withBasePath('/favicon.ico'),
+    shortcut: withBasePath('/favicon.ico'),
+    apple: withBasePath('/icons/apple-touch-icon.png'),
   },
   appleWebApp: {
     capable: true,
