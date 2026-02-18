@@ -50,8 +50,8 @@ export const metadata: Metadata = {
   applicationName: 'POBIM PDF Editor',
   manifest: withBasePath('/manifest.webmanifest'),
   icons: {
-    icon: withBasePath('/favicon.ico'),
-    shortcut: withBasePath('/favicon.ico'),
+    icon: withBasePath('/icons/icon-maskable-512.png'),
+    shortcut: withBasePath('/icons/icon-maskable-512.png'),
     apple: withBasePath('/icons/apple-touch-icon.png'),
   },
   appleWebApp: {
